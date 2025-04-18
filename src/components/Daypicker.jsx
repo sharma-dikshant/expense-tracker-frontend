@@ -11,7 +11,7 @@ export function Daypicker({ expense }) {
   return (
     <DayPicker
       animate
-      mode="multiple"
+      mode="single"
         selected={dates}
       //   onSelect={setSelected}
       footer={
