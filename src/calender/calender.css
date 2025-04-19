@@ -1,0 +1,8 @@
+/* Highlight expense dates */
+.expense-highlight {
+    background-color: #90ee90; /* light green */
+    border-radius: 50%;
+    color: black;
+    font-weight: bold;
+  }
+  

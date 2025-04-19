@@ -1,4 +1,4 @@
-import { Daypicker } from "./components/Daypicker";
+import { Daypicker } from "./calender/Daypicker";
 import { useGetExpenses } from "./expenses/useGetExpenses";
 
 function App() {
