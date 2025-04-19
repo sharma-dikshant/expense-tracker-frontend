@@ -1,15 +1,17 @@
-import { useState } from "react";
-import { useCreateExpense } from "./useCreateExpense";
+import { useEffect, useState } from "react";
+// import useUpdateExpense from "./useUpdateExpense";
 
-function CreateExpenseForm({ date }) {
-  return <div>{date ? <Form date={date} /> : "No date selected"}</div>;
-}
+function UpdateExpenseForm({ date, expense }) {
+  const [item, setItem] = useState(expense.name); // static
+  const [amount, setAmount] = useState(expense.unitPrice);
+  const [quantity, setQuantity] = useState(expense.quantity);
+  console.log(expense.quantity);
 
-function Form({ date }) {
-  const [item] = useState("milk"); // fixed, since it's disabled
-  const [amount, setAmount] = useState(70);
-  const [quantity, setQuantity] = useState(1);
-  const { createExp } = useCreateExpense();
+  useEffect(() => {
+    setItem(expense.name);
+    setAmount(expense.unitPrice);
+    setQuantity(expense.quantity);
+  }, [expense]);
 
   function handleSubmit(e) {
     e.preventDefault();
@@ -19,15 +21,15 @@ function Form({ date }) {
       return;
     }
 
-    const expense = {
+    const updatedExpense = {
       name: item,
       unitPrice: +amount,
       quantity: +quantity,
       user: "user1",
     };
 
-    createExp(expense);
-    console.log(expense);
+    console.log("Updated Expense:", updatedExpense);
+    // useUpdateExpense() mutation goes here
   }
 
   return (
@@ -35,7 +37,7 @@ function Form({ date }) {
       style={{ display: "flex", flexDirection: "column" }}
       onSubmit={handleSubmit}
     >
-      <input type="text" value={date.toUTCString()} disabled />
+      <input type="text" value={date?.toUTCString()} disabled />
       <label>Item</label>
       <input type="text" value={item} disabled />
       <label>Amount</label>
@@ -50,9 +52,9 @@ function Form({ date }) {
         value={quantity}
         onChange={(e) => setQuantity(e.target.value)}
       />
-      <button>Add</button>
+      <button>Update</button>
     </form>
   );
 }
 
-export default CreateExpenseForm;
+export default UpdateExpenseForm;

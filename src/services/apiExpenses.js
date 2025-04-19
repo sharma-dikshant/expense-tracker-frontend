@@ -13,7 +13,7 @@ export async function getExpenses() {
 
 export async function createExpense(expense) {
   try {
-    //TODO add expense validation
+    // expense validation will be handled by backend
     await axios.post("http://localhost:3000/api/expenses", expense);
   } catch (error) {
     console.log("error in creating expense", error);
