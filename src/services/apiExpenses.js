@@ -1,13 +1,13 @@
 // getting all expenses
 import axios from "axios";
-export async function getExpenses() {
+export async function getExpenses(month, year) {
   try {
-    const response = await axios.get("http://localhost:3000/api/expenses");
-    // console.log(response)
+    const response = await axios.get(
+      `http://localhost:3000/api/expenses?month=${month}&year=${year}`
+    );
     return response.data;
   } catch (error) {
     console.error("Failed to fetch expenses:", error);
-    // throw new Error("Failed to Fetch Expenses!");
   }
 }
 
