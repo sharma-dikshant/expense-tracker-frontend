@@ -1,11 +1,12 @@
 import { useEffect, useState } from "react";
-// import useUpdateExpense from "./useUpdateExpense";
+import { useUpdateExpense } from "./useUpdateExpense";
 
 function UpdateExpenseForm({ date, expense }) {
   const [item, setItem] = useState(expense.name); // static
   const [amount, setAmount] = useState(expense.unitPrice);
   const [quantity, setQuantity] = useState(expense.quantity);
-  console.log(expense.quantity);
+
+  const { updateExpenseAsync, isError, isPending } = useUpdateExpense();
 
   useEffect(() => {
     setItem(expense.name);
@@ -27,9 +28,7 @@ function UpdateExpenseForm({ date, expense }) {
       quantity: +quantity,
       user: "user1",
     };
-
-    console.log("Updated Expense:", updatedExpense);
-    // useUpdateExpense() mutation goes here
+    updateExpenseAsync({ id: expense._id, expense: updatedExpense });
   }
 
   return (

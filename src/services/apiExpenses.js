@@ -7,7 +7,7 @@ export async function getExpenses() {
     return response.data;
   } catch (error) {
     console.error("Failed to fetch expenses:", error);
-    throw new Error("Failed to Fetch Expenses!");
+    // throw new Error("Failed to Fetch Expenses!");
   }
 }
 
@@ -17,6 +17,14 @@ export async function createExpense(expense) {
     await axios.post("http://localhost:3000/api/expenses", expense);
   } catch (error) {
     console.log("error in creating expense", error);
-    throw new Error("error: Create expense");
+    // throw new Error("error: Create expense");
+  }
+}
+
+export async function updateExpense(id, expense) {
+  try {
+    await axios.patch(`http://localhost:3000/api/expenses/${id}`, expense);
+  } catch (error) {
+    console.log("error in updating expense", error);
   }
 }
