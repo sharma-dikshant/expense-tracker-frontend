@@ -10,7 +10,7 @@ function Form({ date }) {
   const [item] = useState("milk"); // fixed, since it's disabled
   const [amount, setAmount] = useState(70);
   const [quantity, setQuantity] = useState(1);
-  const { createExp } = useCreateExpense();
+  const { createExp, error, isPending } = useCreateExpense();
   const formatedDate = date.toLocaleDateString("en-US", {
     weekday: "short",
     year: "numeric",
@@ -31,11 +31,12 @@ function Form({ date }) {
       unitPrice: +amount,
       quantity: +quantity,
       user: "user1",
-      date,
+      date: `${date.getFullYear()}-${(date.getMonth() + 1)
+        .toString()
+        .padStart(2, "0")}-${date.getDate().toString().padStart(2, "0")}`,
     };
 
     createExp(expense);
-    console.log(expense);
   }
 
   return (

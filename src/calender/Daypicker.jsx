@@ -7,20 +7,24 @@ import UpdateExpenseForm from "../expenses/UpdateExpenseForm";
 import { useGetExpenses } from "../expenses/useGetExpenses";
 
 export function Daypicker() {
-  const [selected, setSelected] = useState(new Date());
-  const month = selected?.getMonth() + 1;
-  const year = selected?.getFullYear();
-  const { data: res, isLoading, error } = useGetExpenses(month, year);
+  const [selected, setSelected] = useState();
+  const [monthDate, setMonthDate] = useState(new Date());
+  const month = monthDate.getMonth() + 1;
+  const year = monthDate.getFullYear();
 
+  const { data: res, isLoading, error } = useGetExpenses(month, year);
   const expenses = res?.data.expenses;
-  console.log(selected);
 
   const expenseDates = (expenses ?? []).map((el) => new Date(el.date));
 
-  // console.log(expenseDates);
-  const selectedIndex = expenseDates.findIndex(
-    (date) => date.toDateString() === selected?.toDateString()
-  );
+  const normalize = (date) =>
+    new Date(date.getFullYear(), date.getMonth(), date.getDate());
+
+  const selectedIndex = selected
+    ? expenseDates.findIndex(
+        (date) => normalize(date).getTime() === normalize(selected).getTime()
+      )
+    : -1;
 
   if (isLoading) return <p>Loading expenses...</p>;
   if (error) return <p>Something went wrong: {error.message}</p>;
@@ -30,15 +34,21 @@ export function Daypicker() {
       mode="single"
       selected={selected}
       onSelect={setSelected}
+      month={monthDate}
+      onMonthChange={(m) => {
+        setMonthDate(m);
+        setSelected(); // optional: clear selected date when switching months
+      }}
       disabled={{ after: new Date() }}
       modifiers={{ expenses: expenseDates }}
       modifiersClassNames={{ expenses: "expense-highlight" }}
       footer={
         selected ? (
           selectedIndex === -1 ? (
-            <CreateExpenseForm date={selected} />
+            <CreateExpenseForm key={selected?.toISOString()} date={selected} />
           ) : (
             <UpdateExpenseForm
+              key={selected?.toISOString()}
               date={selected}
               expense={expenses[selectedIndex]}
             />
