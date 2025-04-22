@@ -14,32 +14,32 @@ export function Daypicker() {
   const month = monthDate.getMonth() + 1;
   const year = monthDate.getFullYear();
 
-  //? getting total expense for this month
-  useEffect(() => {
-    async function getThisMonthExpense() {
-      const data = await getMonthExpense(month, year);
-      if (data.data[0]) {
-        setTotal(data.data[0].monthExpense);
-      } else {
-        setTotal(0);
-      }
-    }
-    getThisMonthExpense();
-  });
-
   const { data: res, isLoading, error } = useGetExpenses(month, year);
   const expenses = res?.data.expenses;
 
   const expenseDates = (expenses ?? []).map((el) => new Date(el.date));
-
   const normalize = (date) =>
     new Date(date.getFullYear(), date.getMonth(), date.getDate());
-
   const selectedIndex = selected
     ? expenseDates.findIndex(
         (date) => normalize(date).getTime() === normalize(selected).getTime()
       )
     : -1;
+
+  //? Function to refresh the total expense
+  const refreshMonthTotal = async (month, year) => {
+    const data = await getMonthExpense(month, year);
+    if (data.data[0]) {
+      setTotal(data.data[0].monthExpense);
+    } else {
+      setTotal(0);
+    }
+  };
+
+  //? getting total expense for this month
+  useEffect(() => {
+    refreshMonthTotal(month, year);
+  });
 
   if (isLoading) return <p>Loading expenses...</p>;
   if (error) return <p>Something went wrong: {error.message}</p>;
@@ -53,7 +53,7 @@ export function Daypicker() {
         month={monthDate}
         onMonthChange={(m) => {
           setMonthDate(m);
-          setSelected(); // optional: clear selected date when switching months
+          setSelected();
         }}
         disabled={{ after: new Date() }}
         modifiers={{ expenses: expenseDates }}
@@ -64,12 +64,19 @@ export function Daypicker() {
               <CreateExpenseForm
                 key={selected?.toISOString()}
                 date={selected}
+                setTotal={setTotal}
+                refreshMonthTotal={refreshMonthTotal}
+                month={month}
+                year={year}
               />
             ) : (
               <UpdateExpenseForm
                 key={selected?.toISOString()}
                 date={selected}
                 expense={expenses[selectedIndex]}
+                refreshMonthTotal={refreshMonthTotal}
+                month={month}
+                year={year}
               />
             )
           ) : null

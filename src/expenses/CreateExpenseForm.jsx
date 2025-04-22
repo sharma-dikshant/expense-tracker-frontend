@@ -1,12 +1,12 @@
 import { useState } from "react";
 import { useCreateExpense } from "./useCreateExpense";
 
-function CreateExpenseForm({ date }) {
+function CreateExpenseForm({ date, refreshMonthTotal, month, year }) {
   console.log(date);
   return <div>{date ? <Form date={date} /> : "No date selected"}</div>;
 }
 
-function Form({ date }) {
+function Form({ date, refreshMonthTotal, month, year }) {
   const [item] = useState("milk"); // fixed, since it's disabled
   const [amount, setAmount] = useState(70);
   const [quantity, setQuantity] = useState(1);
@@ -18,7 +18,7 @@ function Form({ date }) {
     day: "numeric",
   });
 
-  function handleSubmit(e) {
+  async function handleSubmit(e) {
     e.preventDefault();
 
     if (!item || !amount || !quantity) {
@@ -36,7 +36,12 @@ function Form({ date }) {
         .padStart(2, "0")}-${date.getDate().toString().padStart(2, "0")}`,
     };
 
-    createExp(expense);
+    try {
+      await createExp(expense);
+      await refreshMonthTotal(month, year);
+    } catch (error) {
+      console.error("Error creating expense:", error);
+    }
   }
 
   return (

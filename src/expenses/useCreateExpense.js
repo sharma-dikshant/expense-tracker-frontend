@@ -4,7 +4,7 @@ import { createExpense } from "../services/apiExpenses";
 export function useCreateExpense() {
   const queryClient = useQueryClient();
   const {
-    mutate: createExp,
+    mutateAsync: createExp,
     isSuccess,
     error,
     isPending, // Optional

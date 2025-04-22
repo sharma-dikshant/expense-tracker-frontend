@@ -1,12 +1,13 @@
 import { useEffect, useState } from "react";
 import { useUpdateExpense } from "./useUpdateExpense";
 
-function UpdateExpenseForm({ date, expense }) {
+function UpdateExpenseForm({ date, expense, refreshMonthTotal, month, year }) {
   const [item, setItem] = useState(expense.name); // static
   const [amount, setAmount] = useState(expense.unitPrice);
   const [quantity, setQuantity] = useState(expense.quantity);
 
-  const { updateExpenseAsync, isError, isPending } = useUpdateExpense();
+  const { updateExpenseAsync, isError, isPending, isSuccess } =
+    useUpdateExpense();
 
   useEffect(() => {
     setItem(expense.name);
@@ -14,7 +15,7 @@ function UpdateExpenseForm({ date, expense }) {
     setQuantity(expense.quantity);
   }, [expense]);
 
-  function handleSubmit(e) {
+  async function handleSubmit(e) {
     e.preventDefault();
 
     if (!item || !amount || !quantity) {
@@ -28,7 +29,12 @@ function UpdateExpenseForm({ date, expense }) {
       quantity: +quantity,
       user: "user1",
     };
-    updateExpenseAsync({ id: expense._id, expense: updatedExpense });
+    try {
+      await updateExpenseAsync({ id: expense._id, expense: updatedExpense });
+      await refreshMonthTotal(month, year);
+    } catch (error) {
+      console.error("Error updating expense:", error);
+    }
   }
 
   return (

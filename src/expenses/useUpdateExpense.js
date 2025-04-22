@@ -1,9 +1,11 @@
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { updateExpense } from "../services/apiExpenses";
 
 export function useUpdateExpense() {
+  const queryClient = useQueryClient();
+
   const {
-    mutate: updateExpenseAsync,
+    mutateAsync: updateExpenseAsync,
     isError,
     isSuccess,
     isPending,
@@ -11,6 +13,7 @@ export function useUpdateExpense() {
     mutationFn: ({ id, expense }) => updateExpense(id, expense),
     onSuccess: () => {
       alert("Updated Successfully");
+      queryClient.invalidateQueries({ queryKey: ["expense"] });
     },
     onError: (error) => {
       console.log("Error in updating expense", error);
