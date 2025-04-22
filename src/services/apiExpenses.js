@@ -39,3 +39,14 @@ export async function getMonthExpense(month, year) {
     console.log("error getting month expense", error);
   }
 }
+
+export async function getYearlyExpense(year) {
+  try {
+    const res = await axios.get(
+      `http://127.0.0.1:3000/api/expenses/stats/year/${year}`
+    );
+    return res.data;
+  } catch (error) {
+    console.log("error getting month expense", error);
+  }
+}
