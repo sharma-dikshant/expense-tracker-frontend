@@ -1,9 +1,22 @@
 import { useState } from "react";
 import { useCreateExpense } from "./useCreateExpense";
+import { formatDate } from "../utils/dateUtils";
 
 function CreateExpenseForm({ date, refreshMonthTotal, month, year }) {
-  console.log(date);
-  return <div>{date ? <Form date={date} /> : "No date selected"}</div>;
+  return (
+    <div>
+      {date ? (
+        <Form
+          date={date}
+          refreshMonthTotal={refreshMonthTotal}
+          month={month}
+          year={year}
+        />
+      ) : (
+        "No date selected"
+      )}
+    </div>
+  );
 }
 
 function Form({ date, refreshMonthTotal, month, year }) {
@@ -11,13 +24,6 @@ function Form({ date, refreshMonthTotal, month, year }) {
   const [amount, setAmount] = useState(70);
   const [quantity, setQuantity] = useState(1);
   const { createExp, error, isPending } = useCreateExpense();
-  const formatedDate = date.toLocaleDateString("en-US", {
-    weekday: "short",
-    year: "numeric",
-    month: "long",
-    day: "numeric",
-  });
-
   async function handleSubmit(e) {
     e.preventDefault();
 
@@ -48,7 +54,7 @@ function Form({ date, refreshMonthTotal, month, year }) {
       style={{ display: "flex", flexDirection: "column" }}
       onSubmit={handleSubmit}
     >
-      <input type="text" value={formatedDate} disabled />
+      <input type="text" value={formatDate(date)} disabled />
       <label>Item</label>
       <input type="text" value={item} disabled />
       <label>Amount</label>

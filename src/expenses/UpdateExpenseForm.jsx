@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useUpdateExpense } from "./useUpdateExpense";
+import { formatDate } from "../utils/dateUtils";
 
 function UpdateExpenseForm({ date, expense, refreshMonthTotal, month, year }) {
   const [item, setItem] = useState(expense.name); // static
@@ -37,19 +38,12 @@ function UpdateExpenseForm({ date, expense, refreshMonthTotal, month, year }) {
     }
   }
 
-  const formatedDate = date.toLocaleDateString("en-US", {
-    weekday: "short",
-    year: "numeric",
-    month: "long",
-    day: "numeric",
-  });
-
   return (
     <form
       style={{ display: "flex", flexDirection: "column" }}
       onSubmit={handleSubmit}
     >
-      <input type="text" value={formatedDate} disabled />
+      <input type="text" value={formatDate(date)} disabled />
       <label>Item</label>
       <input type="text" value={item} disabled />
       <label>Amount</label>
