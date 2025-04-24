@@ -85,3 +85,16 @@ export function loginUser(email, password) {
     }
   );
 }
+
+export function SignUpUser(name, email, password, passwordConfirm) {
+  return axios.post(
+    "http://127.0.0.1:3000/api/users/signup",
+    {
+      name,
+      email,
+      password,
+      passwordConfirm,
+    },
+    { withCredentials: true }
+  );
+}
