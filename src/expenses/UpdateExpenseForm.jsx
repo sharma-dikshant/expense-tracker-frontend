@@ -5,6 +5,7 @@ function UpdateExpenseForm({ date, expense, refreshMonthTotal, month, year }) {
   const [item, setItem] = useState(expense.name); // static
   const [amount, setAmount] = useState(expense.unitPrice);
   const [quantity, setQuantity] = useState(expense.quantity);
+  // console.log(da)
 
   const { updateExpenseAsync, isError, isPending, isSuccess } =
     useUpdateExpense();
@@ -36,12 +37,19 @@ function UpdateExpenseForm({ date, expense, refreshMonthTotal, month, year }) {
     }
   }
 
+  const formatedDate = date.toLocaleDateString("en-US", {
+    weekday: "short",
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  });
+
   return (
     <form
       style={{ display: "flex", flexDirection: "column" }}
       onSubmit={handleSubmit}
     >
-      <input type="text" value={date?.toUTCString()} disabled />
+      <input type="text" value={formatedDate} disabled />
       <label>Item</label>
       <input type="text" value={item} disabled />
       <label>Amount</label>
