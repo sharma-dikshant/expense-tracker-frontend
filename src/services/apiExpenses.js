@@ -69,3 +69,19 @@ export async function getYearlyExpense(year) {
     toast.error("failed to fetch yearly expenses");
   }
 }
+
+export function getLoginUser() {
+  return axios.get("http://127.0.0.1:3000/api/users/getUser", {
+    withCredentials: true,
+  });
+}
+
+export function loginUser(email, password) {
+  return axios.post(
+    "http://127.0.0.1:3000/api/users/login",
+    { email, password },
+    {
+      withCredentials: true,
+    }
+  );
+}
