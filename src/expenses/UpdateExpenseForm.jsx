@@ -27,7 +27,6 @@ function UpdateExpenseForm({ date, expense, refreshMonthTotal, month, year }) {
       name: item,
       unitPrice: +amount,
       quantity: +quantity,
-      user: "user1",
     };
     try {
       await updateExpenseAsync({ id: expense._id, expense: updatedExpense });

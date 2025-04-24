@@ -30,7 +30,6 @@ function Form({ date, refreshMonthTotal, month, year }) {
       name: item,
       unitPrice: +amount,
       quantity: +quantity,
-      user: "user1",
       date: `${date.getFullYear()}-${(date.getMonth() + 1)
         .toString()
         .padStart(2, "0")}-${date.getDate().toString().padStart(2, "0")}`,
