@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { getYearlyExpense } from "../services/apiExpenses";
+import styles from "./yearlyExpenseTracker.module.css";
 
 function YearlyExpenseTracker() {
   const [year, setYear] = useState(new Date().getUTCFullYear());
@@ -29,27 +30,28 @@ function YearlyExpenseTracker() {
   }
 
   return (
-    <div>
-      <h1>Yearly Expense Tracker</h1>
+    <div className={styles.yearlyExpenseTracker}>
+      <h1 className={styles.heading}>Yearly Expense Tracker</h1>
       <input
         type="number"
+        className={styles.yearInput}
         placeholder="Enter year"
         min={2000}
         max={new Date().getUTCFullYear()}
         value={year}
         onChange={(e) => setYear(e.target.value)}
       />
-      <button onClick={() => setShow(!show)}>
-        {show ? "hide" : "show"} expenses
+      <button className={styles.toggleButton} onClick={() => setShow(!show)}>
+        {show ? "Hide" : "Show"} Expenses
       </button>
 
       {show &&
-        (expenseLog ? (
-          <div>
-            <p>here is your yearly expense tracker for {year}</p>
+        (expenseLog.length > 0 ? (
+          <div className={styles.expenseList}>
+            <p>Here is your yearly expense tracker for {year}</p>
             {expenseLog.map((exp) => {
               return (
-                <div key={exp._id}>
+                <div key={exp._id} className={styles.expenseItem}>
                   <span>
                     {getMonthName(exp._id)} :: {exp.monthyExpense}
                   </span>
@@ -58,7 +60,7 @@ function YearlyExpenseTracker() {
             })}
           </div>
         ) : (
-          <div>no expense found for {year}</div>
+          <div className={styles.noExpense}>No expenses found for {year}</div>
         ))}
     </div>
   );

@@ -32,7 +32,7 @@ function App() {
   }
 
   return (
-    <div>
+    <div style={{ display: "flex", flexDirection: "column" }}>
       {user ? (
         <>
           <Toaster />

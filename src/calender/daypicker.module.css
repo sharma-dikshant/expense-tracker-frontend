@@ -1,0 +1,43 @@
+/* Daypicker.module.css */
+
+.rdp {
+    font-family: system-ui, sans-serif;
+    font-size: 0.95rem;
+    max-width: 100%;
+    margin: 0 auto;
+}
+
+.rdp-caption {
+    font-weight: bold;
+    color: #222;
+}
+
+.rdp-day_selected:not([disabled]),
+.rdp-day_today {
+    border: 1px solid #337ab7;
+}
+
+.expenseHighlight {
+    background-color: #337ab7 !important;
+    color: white !important;
+    border-radius: 4px;
+}
+
+.totalExpense {
+    margin-top: 1rem;
+    text-align: center;
+    font-size: 1.1rem;
+    font-weight: 500;
+    color: #333;
+    font-family: system-ui, sans-serif;
+}
+
+@media (max-width: 480px) {
+    .rdp {
+        font-size: 0.85rem;
+    }
+
+    .totalExpense {
+        font-size: 1rem;
+    }
+}

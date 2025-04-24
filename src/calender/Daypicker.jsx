@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { DayPicker } from "react-day-picker";
 import "react-day-picker/style.css";
-import "./calender.css";
+import styles from "./daypicker.module.css";
 import CreateExpenseForm from "../expenses/CreateExpenseForm";
 import UpdateExpenseForm from "../expenses/UpdateExpenseForm";
 import { useGetExpenses } from "../expenses/useGetExpenses";
@@ -46,6 +46,7 @@ export function Daypicker() {
   return (
     <>
       <DayPicker
+        className={styles.rdp}
         mode="single"
         selected={selected}
         onSelect={setSelected}
@@ -56,7 +57,7 @@ export function Daypicker() {
         }}
         disabled={{ after: new Date() }}
         modifiers={{ expenses: expenseDates }}
-        modifiersClassNames={{ expenses: "expense-highlight" }}
+        modifiersClassNames={{ expenses: styles.expenseHighlight }} // ✅ Only overrides expense days
         footer={
           selected ? (
             selectedIndex === -1 ? (
@@ -81,7 +82,7 @@ export function Daypicker() {
           ) : null
         }
       />
-      <div>
+      <div className={styles.totalExpense}>
         <span>Total Expense </span>
         <span>{total}</span>
       </div>
