@@ -6,6 +6,7 @@ import CreateExpenseForm from "../expenses/CreateExpenseForm";
 import UpdateExpenseForm from "../expenses/UpdateExpenseForm";
 import { useGetExpenses } from "../expenses/useGetExpenses";
 import { getMonthExpense } from "../services/apiExpenses";
+import { getSelectedExpenseIndex } from "../utils/expenseUtils";
 
 export function Daypicker() {
   const [selected, setSelected] = useState();
@@ -18,28 +19,26 @@ export function Daypicker() {
   const expenses = res?.data.expenses;
 
   const expenseDates = (expenses ?? []).map((el) => new Date(el.date));
-  const normalize = (date) =>
-    new Date(date.getFullYear(), date.getMonth(), date.getDate());
-  const selectedIndex = selected
-    ? expenseDates.findIndex(
-        (date) => normalize(date).getTime() === normalize(selected).getTime()
-      )
-    : -1;
+  const selectedIndex = getSelectedExpenseIndex(expenses, selected);
 
   //? Function to refresh the total expense
   const refreshMonthTotal = async (month, year) => {
-    const data = await getMonthExpense(month, year);
-    if (data.data[0]) {
-      setTotal(data.data[0].monthExpense);
-    } else {
-      setTotal(0);
+    try {
+      const data = await getMonthExpense(month, year);
+      if (data.data[0]) {
+        setTotal(data.data[0].monthExpense);
+      } else {
+        setTotal(0);
+      }
+    } catch (error) {
+      console.log("error getting monthly expense", error);
     }
   };
 
   //? getting total expense for this month
   useEffect(() => {
     refreshMonthTotal(month, year);
-  });
+  }, [month, year]);
 
   if (isLoading) return <p>Loading expenses...</p>;
   if (error) return <p>Something went wrong: {error.message}</p>;

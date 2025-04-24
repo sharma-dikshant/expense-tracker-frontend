@@ -21,7 +21,6 @@ function App() {
         console.error("Error logging in:", error);
         setUser(null);
       }
-      console.log(user);
     }
     loginUser();
   });
