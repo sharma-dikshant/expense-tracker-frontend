@@ -4,7 +4,10 @@ import axios from "axios";
 export async function getExpenses(month, year) {
   try {
     const response = await axios.get(
-      `http://127.0.0.1:3000/api/expenses?month=${month}&year=${year}`
+      `http://127.0.0.1:3000/api/expenses?month=${month}&year=${year}`,
+      {
+        withCredentials: true,
+      }
     );
     return response.data;
   } catch (error) {
@@ -16,7 +19,9 @@ export async function getExpenses(month, year) {
 export async function createExpense(expense) {
   try {
     // expense validation will be handled by backend
-    await axios.post("http://127.0.0.1:3000/api/expenses", expense);
+    await axios.post("http://127.0.0.1:3000/api/expenses", expense, {
+      withCredentials: true,
+    });
   } catch (error) {
     console.log("error in creating expense", error);
     toast.error("failed to create expenses");
@@ -25,7 +30,9 @@ export async function createExpense(expense) {
 
 export async function updateExpense(id, expense) {
   try {
-    await axios.patch(`http://127.0.0.1:3000/api/expenses/${id}`, expense);
+    await axios.patch(`http://127.0.0.1:3000/api/expenses/${id}`, expense, {
+      withCredentials: true,
+    });
   } catch (error) {
     console.log("error in updating expense", error);
     toast.error("failed to update expenses");
@@ -35,7 +42,11 @@ export async function updateExpense(id, expense) {
 export async function getMonthExpense(month, year) {
   try {
     const res = await axios.get(
-      `http://127.0.0.1:3000/api/expenses/stats/month/${month}?year=${year}`
+      `http://127.0.0.1:3000/api/expenses/stats/month/${month}?year=${year}`,
+
+      {
+        withCredentials: true,
+      }
     );
     return res.data;
   } catch (error) {
@@ -47,7 +58,10 @@ export async function getMonthExpense(month, year) {
 export async function getYearlyExpense(year) {
   try {
     const res = await axios.get(
-      `http://127.0.0.1:3000/api/expenses/stats/year/${year}`
+      `http://127.0.0.1:3000/api/expenses/stats/year/${year}`,
+      {
+        withCredentials: true,
+      }
     );
     return res.data;
   } catch (error) {
