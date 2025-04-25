@@ -1,10 +1,14 @@
-// getting all expenses
 import toast from "react-hot-toast";
 import axios from "axios";
+
+// Set the base URL for axios requests
+const API_BASE_URL = import.meta.env.VITE_API_URL;
+
+// Get all expenses
 export async function getExpenses(month, year) {
   try {
     const response = await axios.get(
-      `http://127.0.0.1:3000/api/expenses?month=${month}&year=${year}`,
+      `${API_BASE_URL}/api/expenses?month=${month}&year=${year}`,
       {
         withCredentials: true,
       }
@@ -17,10 +21,10 @@ export async function getExpenses(month, year) {
   }
 }
 
+// Create expense
 export async function createExpense(expense) {
   try {
-    // expense validation will be handled by backend
-    await axios.post("http://127.0.0.1:3000/api/expenses", expense, {
+    await axios.post(`${API_BASE_URL}/api/expenses`, expense, {
       withCredentials: true,
     });
   } catch (error) {
@@ -29,9 +33,10 @@ export async function createExpense(expense) {
   }
 }
 
+// Update expense
 export async function updateExpense(id, expense) {
   try {
-    await axios.patch(`http://127.0.0.1:3000/api/expenses/${id}`, expense, {
+    await axios.patch(`${API_BASE_URL}/api/expenses/${id}`, expense, {
       withCredentials: true,
     });
   } catch (error) {
@@ -40,11 +45,11 @@ export async function updateExpense(id, expense) {
   }
 }
 
+// Get monthly expenses
 export async function getMonthExpense(month, year) {
   try {
     const res = await axios.get(
-      `http://127.0.0.1:3000/api/expenses/stats/month/${month}?year=${year}`,
-
+      `${API_BASE_URL}/api/expenses/stats/month/${month}?year=${year}`,
       {
         withCredentials: true,
       }
@@ -56,10 +61,11 @@ export async function getMonthExpense(month, year) {
   }
 }
 
+// Get yearly expenses
 export async function getYearlyExpense(year) {
   try {
     const res = await axios.get(
-      `http://127.0.0.1:3000/api/expenses/stats/year/${year}`,
+      `${API_BASE_URL}/api/expenses/stats/year/${year}`,
       {
         withCredentials: true,
       }
@@ -69,20 +75,22 @@ export async function getYearlyExpense(year) {
 
     return res.data;
   } catch (error) {
-    console.log("error getting month expense", error);
+    console.log("error getting yearly expense", error);
     toast.error("failed to fetch yearly expenses");
   }
 }
 
+// Get logged-in user
 export function getLoginUser() {
-  return axios.get("http://127.0.0.1:3000/api/users/getUser", {
+  return axios.get(`${API_BASE_URL}/api/users/getUser`, {
     withCredentials: true,
   });
 }
 
+// Login user
 export function loginUser(email, password) {
   return axios.post(
-    "http://127.0.0.1:3000/api/users/login",
+    `${API_BASE_URL}/api/users/login`,
     { email, password },
     {
       withCredentials: true,
@@ -90,9 +98,10 @@ export function loginUser(email, password) {
   );
 }
 
+// Sign up user
 export function SignUpUser(name, email, password, passwordConfirm) {
   return axios.post(
-    "http://127.0.0.1:3000/api/users/signup",
+    `${API_BASE_URL}/api/users/signup`,
     {
       name,
       email,

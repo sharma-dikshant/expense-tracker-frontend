@@ -16,6 +16,7 @@ function App() {
     async function loginUser() {
       try {
         const user = await getLoginUser();
+        console.log(user);
         setUser(user.data.user);
       } catch (error) {
         console.error("Error logging in:", error);
