@@ -41,7 +41,10 @@ export function Daypicker() {
   }, [month, year]);
 
   if (isLoading) return <p>Loading expenses...</p>;
-  if (error) return <p>Something went wrong: {error.message}</p>;
+  if (error) {
+    console.log(error.message);
+    throw Error("Something went wrong");
+  }
 
   return (
     <>

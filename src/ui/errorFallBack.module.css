@@ -1,0 +1,67 @@
+.container {
+    min-height: 60vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 1.5rem;
+}
+
+.emoji {
+    font-size: 5rem;
+    margin-bottom: 1rem;
+    animation: bounce 1s infinite;
+}
+
+.heading {
+    font-size: 2rem;
+    font-weight: bold;
+    color: #dc2626;
+    /* red-600 */
+    margin-bottom: 0.5rem;
+}
+
+.message {
+    color: #374151;
+    /* gray-700 */
+    font-size: 1.125rem;
+    max-width: 24rem;
+}
+
+.retryButton {
+    margin-top: 1.5rem;
+    padding: 0.5rem 1.5rem;
+    background-color: #3b82f6;
+    /* blue-500 */
+    color: white;
+    border: none;
+    border-radius: 9999px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.retryButton:hover {
+    background-color: #2563eb;
+    /* blue-600 */
+}
+
+.subNote {
+    font-size: 0.75rem;
+    color: #9ca3af;
+    /* gray-400 */
+    margin-top: 1rem;
+}
+
+@keyframes bounce {
+
+    0%,
+    100% {
+        transform: translateY(-5%);
+    }
+
+    50% {
+        transform: translateY(10%);
+    }
+}

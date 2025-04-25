@@ -5,7 +5,9 @@ import YearlyExpenseTracker from "./expenses/YearlyExpenseTracker";
 import Login from "./auth-components/Login";
 import { getLoginUser } from "./services/apiExpenses";
 import { Daypicker } from "./calender/Daypicker";
+import { ErrorBoundary } from "react-error-boundary";
 import SignUp from "./auth-components/SignUp";
+import ErrorFallBack from "./ui/ErrorFallBack";
 
 function App() {
   const [user, setUser] = useState(null);
@@ -36,7 +38,12 @@ function App() {
       {user ? (
         <>
           <Toaster />
-          <Daypicker />
+          <ErrorBoundary
+            // fallback={<div>Something went wrong! Please try again later</div>}
+            fallbackRender={ErrorFallBack}
+          >
+            <Daypicker />
+          </ErrorBoundary>
           <YearlyExpenseTracker />
         </>
       ) : (
