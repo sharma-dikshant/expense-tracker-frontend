@@ -21,7 +21,7 @@ function App() {
       }
     }
     loginUser();
-  });
+  }, []);
 
   function handleToggleAuthMethod() {
     if (authMethod === "login") {
