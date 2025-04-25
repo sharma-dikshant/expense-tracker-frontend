@@ -3,12 +3,12 @@ import axios from "axios";
 
 // Set the base URL for axios requests
 const API_BASE_URL = import.meta.env.VITE_API_URL;
-
 // Get all expenses
+console.log(API_BASE_URL);
 export async function getExpenses(month, year) {
   try {
     const response = await axios.get(
-      `${API_BASE_URL}/api/expenses?month=${month}&year=${year}`,
+      `https://expense-tracker-api-production-c72d.up.railway.app/api/expenses?month=${month}&year=${year}`,
       {
         withCredentials: true,
       }
@@ -82,7 +82,7 @@ export async function getYearlyExpense(year) {
 
 // Get logged-in user
 export function getLoginUser() {
-  return axios.get(`${API_BASE_URL}/api/users/getUser`, {
+  return axios.get(`http://127.0.0.1:3000/api/users/getUser`, {
     withCredentials: true,
   });
 }
@@ -90,7 +90,7 @@ export function getLoginUser() {
 // Login user
 export function loginUser(email, password) {
   return axios.post(
-    `${API_BASE_URL}/api/users/login`,
+    `http://127.0.0.1:3000/api/users/login`,
     { email, password },
     {
       withCredentials: true,
