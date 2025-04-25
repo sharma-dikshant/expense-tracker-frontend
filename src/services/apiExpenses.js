@@ -82,7 +82,7 @@ export async function getYearlyExpense(year) {
 
 // Get logged-in user
 export function getLoginUser() {
-  return axios.get(`http://127.0.0.1:3000/api/users/getUser`, {
+  return axios.get(`${API_BASE_URL}/api/users/getUser`, {
     withCredentials: true,
   });
 }
@@ -90,7 +90,7 @@ export function getLoginUser() {
 // Login user
 export function loginUser(email, password) {
   return axios.post(
-    `http://127.0.0.1:3000/api/users/login`,
+    `${API_BASE_URL}/api/users/login`,
     { email, password },
     {
       withCredentials: true,
