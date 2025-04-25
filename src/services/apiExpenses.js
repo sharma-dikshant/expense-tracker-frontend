@@ -9,6 +9,7 @@ export async function getExpenses(month, year) {
         withCredentials: true,
       }
     );
+    if (!response.data) throw Error("failed to fetch expenses");
     return response.data;
   } catch (error) {
     console.error("Failed to fetch expenses:", error);
@@ -63,6 +64,9 @@ export async function getYearlyExpense(year) {
         withCredentials: true,
       }
     );
+
+    if (!res.data) throw Error("Failed to fetch yearly expense");
+
     return res.data;
   } catch (error) {
     console.log("error getting month expense", error);
