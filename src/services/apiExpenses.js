@@ -4,7 +4,7 @@ import axios from "axios";
 export async function getExpenses(month, year) {
   try {
     const response = await axios.get(
-      `http://127.0.0.1:3000/api/expense?month=${month}&year=${year}`,
+      `http://127.0.0.1:3000/api/expenses?month=${month}&year=${year}`,
       {
         withCredentials: true,
       }
