@@ -69,7 +69,9 @@ function Form({ date, refreshMonthTotal, month, year }) {
         value={quantity}
         onChange={(e) => setQuantity(e.target.value)}
       />
-      <button>Add</button>
+      <button disabled={isPending} className={isPending ? "disabled" : ""}>
+        {isPending ? "Adding" : "Add"}
+      </button>
     </form>
   );
 }

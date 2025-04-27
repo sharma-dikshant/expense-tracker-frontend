@@ -3,7 +3,7 @@ import { Toaster } from "react-hot-toast";
 
 import YearlyExpenseTracker from "./expenses/YearlyExpenseTracker";
 import Login from "./auth-components/Login";
-import { getLoginUser } from "./services/apiExpenses";
+import { getLoginUser, logoutUser } from "./services/apiExpenses";
 import { Daypicker } from "./calender/Daypicker";
 import { ErrorBoundary } from "react-error-boundary";
 import SignUp from "./auth-components/SignUp";
@@ -33,6 +33,10 @@ function App() {
     }
   }
 
+  async function handleLogout() {
+    await logoutUser();
+  }
+
   return (
     <div style={{ display: "flex", flexDirection: "column" }}>
       {user ? (
@@ -42,6 +46,9 @@ function App() {
             // fallback={<div>Something went wrong! Please try again later</div>}
             fallbackRender={ErrorFallBack}
           >
+            <button style={{ width: "80px" }} onClick={handleLogout}>
+              Logout
+            </button>
             <Daypicker />
           </ErrorBoundary>
           <YearlyExpenseTracker />

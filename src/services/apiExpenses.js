@@ -44,6 +44,17 @@ export async function updateExpense(id, expense) {
   }
 }
 
+export async function deleteExpense(id) {
+  try {
+    await axios.delete(`${API_BASE_URL}/api/expenses/${id}`, {
+      withCredentials: true,
+    });
+  } catch (error) {
+    console.log("error in deleting expense", error);
+    toast.error("failed to delete expense");
+  }
+}
+
 // Get monthly expenses
 export async function getMonthExpense(month, year) {
   try {
@@ -109,4 +120,10 @@ export function SignUpUser(name, email, password, passwordConfirm) {
     },
     { withCredentials: true }
   );
+}
+
+export function logoutUser() {
+  return axios.post(`${API_BASE_URL}/api/users/logout`, {
+    withCredentials: true,
+  });
 }
