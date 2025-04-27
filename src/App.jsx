@@ -16,7 +16,6 @@ function App() {
     async function loginUser() {
       try {
         const user = await getLoginUser();
-        console.log(user);
         setUser(user.data.user);
       } catch (error) {
         console.error("Error logging in:", error);
@@ -49,7 +48,9 @@ function App() {
         </>
       ) : (
         <>
-          <button onClick={handleToggleAuthMethod}>{authMethod}</button>
+          <button onClick={handleToggleAuthMethod}>
+            {authMethod === "login" ? "signup" : "login"}
+          </button>
           {authMethod === "login" && <Login />}
           {authMethod === "signup" && <SignUp />}
         </>

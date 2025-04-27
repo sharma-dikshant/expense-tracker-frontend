@@ -10,7 +10,6 @@ function YearlyExpenseTracker() {
   useEffect(() => {
     async function getYearlyExpenseLog() {
       const res = await getYearlyExpense(year);
-      console.log(res);
       if (res.data) {
         setExpenseLog(res.data);
       } else {

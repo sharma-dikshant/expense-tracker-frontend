@@ -4,11 +4,10 @@ import axios from "axios";
 // Set the base URL for axios requests
 const API_BASE_URL = import.meta.env.VITE_API_URL;
 // Get all expenses
-console.log(API_BASE_URL);
 export async function getExpenses(month, year) {
   try {
     const response = await axios.get(
-      `https://expense-tracker-api-production-c72d.up.railway.app/api/expenses?month=${month}&year=${year}`,
+      `${API_BASE_URL}/api/expenses?month=${month}&year=${year}`,
       {
         withCredentials: true,
       }
