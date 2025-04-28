@@ -20,10 +20,12 @@ function CreateExpenseForm({ date, refreshMonthTotal, month, year }) {
 }
 
 function Form({ date, refreshMonthTotal, month, year }) {
-  const [item] = useState("milk"); // fixed, since it's disabled
-  const [amount, setAmount] = useState(70);
-  const [quantity, setQuantity] = useState(1);
+  const l_expense = JSON.parse(localStorage.getItem("expense"));
+  const [item] = useState(l_expense ? l_expense.name : "milk"); // fixed, since it's disabled
+  const [amount, setAmount] = useState(l_expense ? l_expense.unitPrice : 70);
+  const [quantity, setQuantity] = useState(l_expense ? l_expense.quantity : 1);
   const { createExp, error, isPending } = useCreateExpense();
+
   async function handleSubmit(e) {
     e.preventDefault();
 
@@ -42,6 +44,7 @@ function Form({ date, refreshMonthTotal, month, year }) {
     };
 
     try {
+      localStorage.setItem("expense", JSON.stringify(expense));
       await createExp(expense);
       await refreshMonthTotal(month, year);
     } catch (error) {
