@@ -48,12 +48,25 @@ function YearlyExpenseTracker() {
         (expenseLog.length > 0 ? (
           <div className={styles.expenseList}>
             <p>Here is your yearly expense tracker for {year}</p>
-            {expenseLog.map((exp) => {
+            {expenseLog?.map((exp) => {
               return (
                 <div key={exp._id} className={styles.expenseItem}>
                   <span>
                     {getMonthName(exp._id)} :: {exp.monthyExpense}
                   </span>
+                  <ul>
+                    {exp?.items.map((i, _i) => (
+                      <li key={_i}>
+                        <div style={{ display: "flex" }}>
+                          <span style={{ width: "40%", textAlign: "left" }}>
+                            {i.name}
+                          </span>
+                          <span>{i.expense}</span>
+                        </div>
+                      </li>
+                    ))}
+                  </ul>
+                  <span>total : {exp.totalMonthlyExpense}</span>
                 </div>
               );
             })}
