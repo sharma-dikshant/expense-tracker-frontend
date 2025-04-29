@@ -28,7 +28,7 @@ export function Daypicker({ selectedItem }) {
   //? Function to refresh the total expense
   const refreshMonthTotal = async (month, year) => {
     try {
-      const data = await getMonthExpense(month, year);
+      const data = await getMonthExpense(month, year, { name: selectedItem });
       if (data.data[0]) {
         setTotal(data.data[0].monthExpense);
       } else {
@@ -42,7 +42,7 @@ export function Daypicker({ selectedItem }) {
   //? getting total expense for this month
   useEffect(() => {
     refreshMonthTotal(month, year);
-  }, [month, year]);
+  }, [month, year, selectedItem]);
 
   if (isLoading) return <p>Loading expenses...</p>;
   if (error) {

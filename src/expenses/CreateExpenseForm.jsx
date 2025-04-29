@@ -3,7 +3,6 @@ import { useCreateExpense } from "./useCreateExpense";
 import { formatDate } from "../utils/dateUtils";
 
 function CreateExpenseForm({ date, refreshMonthTotal, month, year, selectedItem }) {
-  console.log(selectedItem)
   return (
     <div>
       {date ? (
