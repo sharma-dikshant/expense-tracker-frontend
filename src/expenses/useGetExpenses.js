@@ -1,11 +1,11 @@
 import { useQuery } from "@tanstack/react-query";
 import { getExpenses } from "./../services/apiExpenses";
 
-export function useGetExpenses(month, year) {
+export function useGetExpenses(queryObj) {
   const { data, isLoading, error } = useQuery({
-    queryKey: ["expenses", month, year],
-    queryFn: () => getExpenses(month, year),
-    enabled: !!month && !!year,
+    queryKey: ["expenses", ...Object.values(queryObj)],
+    queryFn: () => getExpenses(queryObj),
+    // enabled: !!month && !!year,
   });
 
   return { data, isLoading, error };

@@ -4,10 +4,11 @@ import axios from "axios";
 // Set the base URL for axios requests
 const API_BASE_URL = import.meta.env.VITE_API_URL;
 // Get all expenses
-export async function getExpenses(month, year) {
+export async function getExpenses(queryObj) {
+  const queryStr = new URLSearchParams(queryObj).toString();
   try {
     const response = await axios.get(
-      `${API_BASE_URL}/api/expenses?month=${month}&year=${year}`,
+      `${API_BASE_URL}/api/expenses?${queryStr}`,
       {
         withCredentials: true,
       }
@@ -56,10 +57,11 @@ export async function deleteExpense(id) {
 }
 
 // Get monthly expenses
-export async function getMonthExpense(month, year) {
+export async function getMonthExpense(month, year, queryObj) {
   try {
+    const queryStr = new URLSearchParams({ year, ...queryObj }).toString();
     const res = await axios.get(
-      `${API_BASE_URL}/api/expenses/stats/month/${month}?year=${year}`,
+      `${API_BASE_URL}/api/expenses/stats/month/${month}?${queryStr}`,
       {
         withCredentials: true,
       }

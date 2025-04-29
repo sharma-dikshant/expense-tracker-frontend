@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useCreateExpense } from "./useCreateExpense";
 import { formatDate } from "../utils/dateUtils";
 
-function CreateExpenseForm({ date, refreshMonthTotal, month, year }) {
+function CreateExpenseForm({ date, refreshMonthTotal, month, year, selectedItem }) {
   return (
     <div>
       {date ? (
@@ -11,6 +11,7 @@ function CreateExpenseForm({ date, refreshMonthTotal, month, year }) {
           refreshMonthTotal={refreshMonthTotal}
           month={month}
           year={year}
+          selectedItem={selectedItem}
         />
       ) : (
         "No date selected"
@@ -19,9 +20,9 @@ function CreateExpenseForm({ date, refreshMonthTotal, month, year }) {
   );
 }
 
-function Form({ date, refreshMonthTotal, month, year }) {
+function Form({ date, refreshMonthTotal, month, year, selectedItem }) {
   const l_expense = JSON.parse(localStorage.getItem("expense"));
-  const [item] = useState(l_expense ? l_expense.name : "milk"); // fixed, since it's disabled
+  // const [item] = useState(l_expense ? l_expense.name : "milk"); // fixed, since it's disabled
   const [amount, setAmount] = useState(l_expense ? l_expense.unitPrice : 70);
   const [quantity, setQuantity] = useState(l_expense ? l_expense.quantity : 1);
   const { createExp, error, isPending } = useCreateExpense();
@@ -29,13 +30,13 @@ function Form({ date, refreshMonthTotal, month, year }) {
   async function handleSubmit(e) {
     e.preventDefault();
 
-    if (!item || !amount || !quantity) {
+    if (!selectedItem || !amount || !quantity) {
       alert("Please fill all the fields");
       return;
     }
 
     const expense = {
-      name: item,
+      name: selectedItem,
       unitPrice: +amount,
       quantity: +quantity,
       date: `${date.getFullYear()}-${(date.getMonth() + 1)
@@ -59,7 +60,7 @@ function Form({ date, refreshMonthTotal, month, year }) {
     >
       <input type="text" value={formatDate(date)} disabled />
       <label>Item</label>
-      <input type="text" value={item} disabled />
+      <input type="text" value={selectedItem} disabled />
       <label>Amount</label>
       <input
         type="number"

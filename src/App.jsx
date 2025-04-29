@@ -3,15 +3,20 @@ import { Toaster } from "react-hot-toast";
 
 import YearlyExpenseTracker from "./expenses/YearlyExpenseTracker";
 import Login from "./auth-components/Login";
-import { getLoginUser, logoutUser } from "./services/apiExpenses";
+import { getLoginUser } from "./services/apiExpenses";
 import { Daypicker } from "./calender/Daypicker";
 import { ErrorBoundary } from "react-error-boundary";
 import SignUp from "./auth-components/SignUp";
 import ErrorFallBack from "./ui/ErrorFallBack";
+import Header from "./ui/Header";
 
 function App() {
   const [user, setUser] = useState(null);
+  const [selectedItem, setSelectedItem] = useState(
+    localStorage.getItem("selectedExpenseItem") || ""
+  );
   const [authMethod, setAuthMethod] = useState("login");
+
   useEffect(() => {
     async function loginUser() {
       try {
@@ -33,10 +38,6 @@ function App() {
     }
   }
 
-  async function handleLogout() {
-    await logoutUser();
-  }
-
   return (
     <div style={{ display: "flex", flexDirection: "column" }}>
       {user ? (
@@ -46,10 +47,12 @@ function App() {
             // fallback={<div>Something went wrong! Please try again later</div>}
             fallbackRender={ErrorFallBack}
           >
-            <button style={{ width: "80px" }} onClick={handleLogout}>
-              Logout
-            </button>
-            <Daypicker />
+            <Header setSelectedItem={setSelectedItem} />
+            {selectedItem === "" ? (
+              <div>please select an Item</div>
+            ) : (
+              <Daypicker selectedItem={selectedItem} />
+            )}
           </ErrorBoundary>
           <YearlyExpenseTracker />
         </>
