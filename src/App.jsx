@@ -51,7 +51,7 @@ function App() {
             {selectedItem === "" ? (
               <div>please select an Item</div>
             ) : (
-              <Daypicker />
+              <Daypicker selectedItem={selectedItem} />
             )}
           </ErrorBoundary>
           <YearlyExpenseTracker />

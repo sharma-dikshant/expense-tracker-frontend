@@ -8,14 +8,18 @@ import { useGetExpenses } from "../expenses/useGetExpenses";
 import { getMonthExpense } from "../services/apiExpenses";
 import { getSelectedExpenseIndex } from "../utils/expenseUtils";
 
-export function Daypicker() {
+export function Daypicker({ selectedItem }) {
   const [selected, setSelected] = useState();
   const [monthDate, setMonthDate] = useState(new Date());
   const [total, setTotal] = useState(0);
   const month = monthDate.getMonth() + 1;
   const year = monthDate.getFullYear();
 
-  const { data: res, isLoading, error } = useGetExpenses(month, year);
+  const {
+    data: res,
+    isLoading,
+    error,
+  } = useGetExpenses({ month, year, name: selectedItem });
   const expenses = res?.data.expenses;
 
   const expenseDates = (expenses ?? []).map((el) => new Date(el.date));
@@ -71,6 +75,7 @@ export function Daypicker() {
                 refreshMonthTotal={refreshMonthTotal}
                 month={month}
                 year={year}
+                selectedItem={selectedItem}
               />
             ) : (
               <UpdateExpenseForm
@@ -80,6 +85,7 @@ export function Daypicker() {
                 refreshMonthTotal={refreshMonthTotal}
                 month={month}
                 year={year}
+                selectedItem={selectedItem}
               />
             )
           ) : null
