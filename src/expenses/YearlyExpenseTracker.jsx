@@ -52,7 +52,7 @@ function YearlyExpenseTracker() {
               return (
                 <div key={exp._id} className={styles.expenseItem}>
                   <span>
-                    {getMonthName(exp._id)} :: {exp.monthyExpense}
+                    <strong>-:: {getMonthName(exp._id)} ::-</strong>
                   </span>
                   <ul>
                     {exp?.items.map((i, _i) => (
