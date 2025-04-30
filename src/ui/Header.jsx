@@ -2,7 +2,7 @@ import { useState } from "react";
 import { logoutUser } from "../services/apiExpenses";
 
 function Header({ setSelectedItem }) {
-  const [item, setItem] = useState("milk");
+  const [item, setItem] = useState("");
   const [itemList, setItemList] = useState(
     JSON.parse(localStorage.getItem("ExpenseItemList")) || []
   );
@@ -18,7 +18,7 @@ function Header({ setSelectedItem }) {
     } else if (itemList.includes(newItem)) {
       console.log("item already exist");
     } else {
-      const newItemList = [newItem, ...itemList];
+      const newItemList = [newItem.toLowerCase(), ...itemList];
       setItemList(newItemList);
       localStorage.setItem("ExpenseItemList", JSON.stringify(newItemList));
     }
