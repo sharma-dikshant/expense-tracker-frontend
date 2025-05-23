@@ -24,30 +24,47 @@ function Login() {
 
   return (
     <>
-      <form onSubmit={handleOnSubmit}>
-        <label htmlFor="email">Email:</label>
+      <form onSubmit={handleOnSubmit} className={styles.formContainer}>
+        <label htmlFor="email" className={styles.label}>
+          Email:
+        </label>
         <input
           type="email"
           id="email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
+          className={styles.input}
           required
         />
-        <br />
-        <label htmlFor="password">Password</label>
+        <label htmlFor="password" className={styles.label}>
+          Password:
+        </label>
         <input
           type="text"
           id="password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
+          className={styles.input}
           required
         />
-        <button type="submit">Login</button>
+        <button type="submit" className={styles.button}>
+          Login
+        </button>
       </form>
-      {isSuccess === "fail" && <div>Please! try again</div>}
-      {isSuccess === "none" && <div>Please Login to Continue</div>}
+      {isSuccess === "fail" && (
+        <div className={`${styles.message} ${styles.fail}`}>
+          Please! try again
+        </div>
+      )}
+      {isSuccess === "none" && (
+        <div className={`${styles.message} ${styles.none}`}>
+          Please Login to Continue
+        </div>
+      )}
       {isSuccess === "success" && (
-        <div>success! please refresh the page to continue...</div>
+        <div className={`${styles.message} ${styles.success}`}>
+          success! please refresh the page to continue...
+        </div>
       )}
     </>
   );

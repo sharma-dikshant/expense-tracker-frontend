@@ -12,8 +12,8 @@ function SignUp() {
   async function handleOnSubmit(e) {
     e.preventDefault();
 
-    if (password != passwordConfirm) {
-      setMessage("password and password confirm is not same!");
+    if (password !== passwordConfirm) {
+      setMessage("Password and password confirm do not match!");
       return;
     }
 
@@ -33,43 +33,59 @@ function SignUp() {
 
   return (
     <>
-      <form onSubmit={handleOnSubmit}>
-        <label htmlFor="name">name</label>
+      <form onSubmit={handleOnSubmit} className={styles.formContainer}>
+        <label htmlFor="name" className={styles.label}>
+          Name
+        </label>
         <input
           type="text"
           id="name"
           value={name}
+          className={styles.input}
           required
           onChange={(e) => setName(e.target.value)}
         />
 
-        <label htmlFor="email">email</label>
+        <label htmlFor="email" className={styles.label}>
+          Email
+        </label>
         <input
           type="email"
           id="email"
           value={email}
+          className={styles.input}
           required
           onChange={(e) => setEmail(e.target.value)}
         />
-        <label htmlFor="password">password</label>
+
+        <label htmlFor="password" className={styles.label}>
+          Password
+        </label>
         <input
           type="text"
           id="password"
           value={password}
+          className={styles.input}
           required
           onChange={(e) => setPassword(e.target.value)}
         />
-        <label htmlFor="passwordConfirm">password Confirm</label>
+
+        <label htmlFor="passwordConfirm" className={styles.label}>
+          Confirm Password
+        </label>
         <input
           type="text"
           id="passwordConfirm"
           value={passwordConfirm}
+          className={styles.input}
           required
           onChange={(e) => setPasswordConfirm(e.target.value)}
         />
-        <button>Sign Up</button>
+
+        <button className={styles.button}>Sign Up</button>
       </form>
-      {message && <div>{message}</div>}
+
+      {message && <div className={styles.message}>{message}</div>}
     </>
   );
 }
