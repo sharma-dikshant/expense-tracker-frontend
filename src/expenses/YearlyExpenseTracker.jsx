@@ -84,7 +84,9 @@ function YearlyExpenseTracker() {
             <div className={styles.noExpense}>No expenses found for {year}</div>
           ))}
       </div>
-      <YearlyExpensePieChart expenseLog={expenseLog} year={year} />
+      <div style={{ maxWidth: "50vh", textAlign: "center" }}>
+        <YearlyExpensePieChart expenseLog={expenseLog} year={year} />
+      </div>
     </>
   );
 }
