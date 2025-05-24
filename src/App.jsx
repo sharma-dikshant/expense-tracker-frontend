@@ -38,6 +38,11 @@ function App() {
     }
   }
 
+  const handleRedirectToForgetPassword = () => {
+    window.location =
+      "https://expense-tracker-api-production-c72d.up.railway.app/forgetPassword";
+  };
+
   return (
     <div style={{ display: "flex", flexDirection: "column" }}>
       {user ? (
@@ -58,9 +63,14 @@ function App() {
         </>
       ) : (
         <>
-          <button onClick={handleToggleAuthMethod}>
-            {authMethod === "login" ? "signup" : "login"}
-          </button>
+          <div>
+            <button onClick={handleToggleAuthMethod}>
+              {authMethod === "login" ? "signup" : "login"}
+            </button>
+            <button onClick={handleRedirectToForgetPassword}>
+              Forget Password
+            </button>
+          </div>
           {authMethod === "login" && <Login />}
           {authMethod === "signup" && <SignUp />}
         </>
