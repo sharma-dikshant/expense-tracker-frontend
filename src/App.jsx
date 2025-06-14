@@ -9,6 +9,7 @@ import { ErrorBoundary } from "react-error-boundary";
 import SignUp from "./auth-components/SignUp";
 import ErrorFallBack from "./ui/ErrorFallBack";
 import Header from "./ui/Header";
+import MultiAxialLineChart from "./ui/MultiAxialLineChart";
 
 function App() {
   const [user, setUser] = useState(null);
@@ -60,6 +61,7 @@ function App() {
             )}
           </ErrorBoundary>
           <YearlyExpenseTracker />
+          <MultiAxialLineChart />
         </>
       ) : (
         <>
