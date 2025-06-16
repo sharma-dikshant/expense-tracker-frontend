@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { loginUser } from "../services/apiExpenses";
 import styles from "./login.module.css";
+import { Link, redirect } from "react-router";
 
 function Login() {
   const [email, setEmail] = useState("");
@@ -63,7 +64,7 @@ function Login() {
       )}
       {isSuccess === "success" && (
         <div className={`${styles.message} ${styles.success}`}>
-          success! please refresh the page to continue...
+          <Link to="/expense-tracker">Continue...</Link>
         </div>
       )}
     </>

@@ -1,12 +1,18 @@
 import { useState } from "react";
 import { DayPicker } from "react-day-picker";
-import { Link } from "react-router";
+import { Link, useLoaderData } from "react-router";
 function ExpenseTrackingPage() {
   const [newItem, setNewItem] = useState("");
   const [items, setItems] = useState(
     JSON.parse(localStorage.getItem("items")) || []
   );
 
+  const loadedData = useLoaderData();
+  const user = loadedData?.data?.user || undefined;
+  if (!user) {
+    alert("Please login to continue!");
+    return <Link to="/auth">Login</Link>;
+  }
   function addNewItem() {
     if (newItem.trim() === "") {
       return;

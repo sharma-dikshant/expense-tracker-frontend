@@ -6,9 +6,11 @@ import ExpenseTrackingPage from "./pages/ExpenseTrackingPage";
 import AnalyticsPage from "./pages/AnalyticsPage";
 import Transactions from "./pages/Transactions";
 import ErrorFallBack from "./ui/ErrorFallBack";
+import { protectedLoader } from "./utils/protectedLoader";
 const router = createBrowserRouter([
   {
     element: <Layout />,
+    errorElement: <div>Something went wrong!</div>,
     children: [
       {
         index: true,
@@ -22,14 +24,17 @@ const router = createBrowserRouter([
       {
         path: "/expense-tracker",
         element: <ExpenseTrackingPage />,
+        loader: protectedLoader,
       },
       {
         path: "/analytics",
         element: <AnalyticsPage />,
+        loader: protectedLoader,
       },
       {
         path: "/transactions",
         element: <Transactions />,
+        loader: protectedLoader,
       },
       {
         path: "*",
