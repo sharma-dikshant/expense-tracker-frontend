@@ -1,0 +1,30 @@
+.itemsList {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.item {
+    color: rgb(255, 255, 255);
+    background-color: #5098e5b4;
+    padding: 0.5rem 1rem;
+    border-radius: 80px;
+    cursor: pointer;
+}
+
+.selected {
+    background-color: #34af4f;
+}
+
+.deleteBtn {
+    border: none;
+    background-color: transparent;
+    cursor: pointer;
+    color: #ff0000;
+    font-size: 1.2rem;
+    margin-left: 10px;
+    padding: 0;
+}

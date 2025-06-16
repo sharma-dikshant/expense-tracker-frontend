@@ -1,12 +1,18 @@
 import { useState } from "react";
-import { DayPicker } from "react-day-picker";
+import styles from "./expenseTrackingPage.module.css";
 import { Link, useLoaderData } from "react-router";
+import BasicAnalytics from "./../components/BasicAnalytics";
+import { Daypicker } from "../calender/Daypicker";
+
 function ExpenseTrackingPage() {
+  //? State to manage new item input, items list and selecting item
+  const [selectedItem, setSelectedItem] = useState("");
   const [newItem, setNewItem] = useState("");
   const [items, setItems] = useState(
     JSON.parse(localStorage.getItem("items")) || []
   );
 
+  console.log(selectedItem);
   const loadedData = useLoaderData();
   const user = loadedData?.data?.user || undefined;
   if (!user) {
@@ -31,11 +37,13 @@ function ExpenseTrackingPage() {
 
   function removeItem(e) {
     const itemName = e.target.parentNode.firstChild.textContent;
+    if (itemName === selectedItem) {
+      setSelectedItem("");
+    }
     const updatedItems = items.filter((item) => item.name !== itemName);
     localStorage.setItem("items", JSON.stringify(updatedItems));
     setItems(updatedItems);
   }
-
   return (
     <>
       <h3>Expense Tracker</h3>
@@ -53,41 +61,34 @@ function ExpenseTrackingPage() {
           ) : (
             <div>Add item to continue</div>
           )}
-          <ul>
+          <ul className={styles.itemsList}>
             {items.map((items, i) => {
               return (
-                <li key={i}>
+                <li
+                  className={`${styles.item} ${
+                    items.name === selectedItem ? styles.selected : ""
+                  }`}
+                  key={i}
+                  onClick={() => {
+                    if (items.name === selectedItem) {
+                      setSelectedItem("");
+                    } else {
+                      setSelectedItem(items.name);
+                    }
+                  }}
+                >
                   {items.name}
-                  <button onClick={removeItem}>x</button>
+                  <button onClick={removeItem} className={styles.deleteBtn}>
+                    x
+                  </button>
                 </li>
               );
             })}
           </ul>
         </div>
-        <DayPicker />
+        <Daypicker selectedItem={selectedItem} />
       </div>
-      <div>
-        <h1>Basic Analytics</h1>
-        <div>
-          <ul>
-            <li>
-              Total Expense For this month: <span>0</span>
-            </li>
-            <li>
-              Total Expense For this year: <span>0</span>
-            </li>
-            <li>
-              Note for this month: <p>Please limit expenses for this month</p>
-              <button>Update Month Note</button>
-            </li>
-            <li>
-              Note for this year: <p>Please limit expenses for this year</p>
-              <button>Update Year Note</button>
-            </li>
-          </ul>
-        </div>
-        <Link to="/analytics">See Detailed Analytics</Link>
-      </div>
+      <BasicAnalytics />
     </>
   );
 }
