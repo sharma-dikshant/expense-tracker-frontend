@@ -12,7 +12,6 @@ function ExpenseTrackingPage() {
     JSON.parse(localStorage.getItem("items")) || []
   );
 
-  console.log(selectedItem);
   const loadedData = useLoaderData();
   const user = loadedData?.data?.user || undefined;
   if (!user) {
