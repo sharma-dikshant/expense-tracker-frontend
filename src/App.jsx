@@ -4,6 +4,8 @@ import HomePage from "./pages/HomePage";
 import AuthPage from "./pages/AuthPage";
 import ExpenseTrackingPage from "./pages/ExpenseTrackingPage";
 import AnalyticsPage from "./pages/AnalyticsPage";
+import Transactions from "./pages/Transactions";
+import ErrorFallBack from "./ui/ErrorFallBack";
 const router = createBrowserRouter([
   {
     element: <Layout />,
@@ -24,6 +26,14 @@ const router = createBrowserRouter([
       {
         path: "/analytics",
         element: <AnalyticsPage />,
+      },
+      {
+        path: "/transactions",
+        element: <Transactions />,
+      },
+      {
+        path: "*",
+        element: <h1>Page Not Found</h1>,
       },
     ],
   },
