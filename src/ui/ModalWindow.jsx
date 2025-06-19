@@ -15,14 +15,21 @@ const style = {
   p: 4,
 };
 
-export default function ModalWindow({ children, text }) {
+export default function ModalWindow({ children, text, onClickFn }) {
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
 
   return (
     <div>
-      <Button onClick={handleOpen}>{text}</Button>
+      <Button
+        onClick={() => {
+          handleOpen();
+          if (onClickFn) onClickFn();
+        }}
+      >
+        {text}
+      </Button>
       <Modal
         open={open}
         onClose={handleClose}

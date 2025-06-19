@@ -13,7 +13,7 @@ function HomePage() {
         <Link to="/expense-tracker">Get Started</Link>
       </div>
       <div>
-        <Link to="/link">Explore Analytics</Link>
+        <Link to="/analytics">Explore Analytics</Link>
       </div>
       <div>
         <Link to="contact-us">Contact Us</Link>
