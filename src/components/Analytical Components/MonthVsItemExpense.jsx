@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import PieChart from "../../ui/PieChart";
 import { generateUniqueRandomHSV } from "../../utils/generateColor";
 import { getMonthExpense, getYearlyExpense } from "../../services/apiExpenses";
+import { useGetAnnualExpenseData } from "../../expenses/useGetAnnualExpenseData";
 
 const months = [
   "January",
@@ -26,17 +27,13 @@ function MonthVsItemExpense() {
   const [month, setMonth] = useState(currMonth);
   const [report, setReport] = useState([]);
 
+  const { data, isLoading, error } = useGetAnnualExpenseData(year);
+
   useEffect(() => {
-    async function loadData() {
-      try {
-        const response = await getYearlyExpense(year);
-        setReport(response);
-      } catch (error) {
-        console.log(error);
-      }
+    if (data) {
+      setReport(data.data);
     }
-    loadData();
-  }, [month, year]);
+  }, [data]);
 
   const chartData = useMemo(() => prepareData(report, month), [report, month]);
 
@@ -78,13 +75,13 @@ function prepareData(report, month) {
   let labels = [];
 
   let idx = -1;
-  if (report.data) {
-    idx = report.data.findIndex((el) => el._id === month);
+  if (report.length > 0) {
+    idx = report.findIndex((el) => el._id === month);
   }
 
   if (idx != -1) {
-    totalMonthExpense = report.data[idx].totalMonthlyExpense;
-    report.data[idx].items.forEach((el) => {
+    totalMonthExpense = report[idx].totalMonthlyExpense;
+    report[idx].items.forEach((el) => {
       dataVals.push(el.expense);
       labels.push(el.name);
     });

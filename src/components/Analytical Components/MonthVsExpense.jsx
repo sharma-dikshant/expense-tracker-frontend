@@ -1,26 +1,20 @@
 import { useEffect, useMemo, useState } from "react";
 import MultiAxialLineChart from "../../ui/MultiAxialLineChart";
 import { getYearlyExpense } from "../../services/apiExpenses";
+import { useGetAnnualExpenseData } from "../../expenses/useGetAnnualExpenseData";
 
 const currYear = new Date().getFullYear();
+
 function MonthVsExpense() {
   const [year, setYear] = useState(new Date().getFullYear());
   const [expenseReport, setExpenseReport] = useState([]);
-  const [isLoading, setIsLoading] = useState(false);
+  const { data, isLoading, error } = useGetAnnualExpenseData(year);
 
   useEffect(() => {
-    async function loadData() {
-      const report = await fetchReport(year);
-      setExpenseReport(report);
+    if (data) {
+      setExpenseReport(data.data);
     }
-    setIsLoading(true);
-    const timer = setTimeout(() => {
-      loadData();
-      setIsLoading(false);
-    }, 2000);
-
-    return () => clearTimeout(timer);
-  }, [year]);
+  }, [data]);
 
   const chartData = useMemo(() => prepareData(expenseReport), [expenseReport]);
 

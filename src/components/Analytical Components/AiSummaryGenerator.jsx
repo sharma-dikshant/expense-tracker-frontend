@@ -29,7 +29,7 @@ function AiSummaryGenerator() {
 
   return (
     <ModalWindow
-      text={"Generate Ai Summary"}
+      text={`Generate Summary for FY. ${new Date().getFullYear()}`}
       onClickFn={(setter = setSummary) => LoadAiSummary(setter)}
     >
       {isLoading ? <CircularProgress /> : <Markdown>{summary}</Markdown>}
