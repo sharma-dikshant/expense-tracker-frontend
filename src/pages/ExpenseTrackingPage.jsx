@@ -1,8 +1,8 @@
 import { useState } from "react";
 import styles from "./expenseTrackingPage.module.css";
 import { Link, useLoaderData } from "react-router";
-import BasicAnalytics from "./../components/BasicAnalytics";
-import { Daypicker } from "../calender/Daypicker";
+import BasicAnalytics from "../components/Analytical Components/BasicAnalytics";
+import { Daypicker } from "../components/Daypicker";
 
 function ExpenseTrackingPage() {
   //? state to manage month and year for the calendar

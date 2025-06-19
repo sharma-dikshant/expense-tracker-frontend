@@ -1,7 +1,7 @@
 import { Link } from "react-router";
 import styles from "./basicAnalytics.module.css";
 import { useState } from "react";
-import { useMonthlyExpense } from "./../expenses/useRefreshMonthTotal";
+import { useMonthlyExpense } from "../../expenses/useRefreshMonthTotal";
 
 function BasicAnalytics({ monthDate }) {
   //? states to manage analytics data

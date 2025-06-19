@@ -6,7 +6,7 @@ import CreateExpenseForm from "../expenses/CreateExpenseForm";
 import UpdateExpenseForm from "../expenses/UpdateExpenseForm";
 import { useGetExpenses } from "../expenses/useGetExpenses";
 import { getSelectedExpenseIndex } from "../utils/expenseUtils";
-import ModalWindow from "../components/ModalWindow";
+import ModalWindow from "../ui/ModalWindow";
 
 export function Daypicker({
   selectedItem,
