@@ -6,10 +6,15 @@ import CreateExpenseForm from "../expenses/CreateExpenseForm";
 import UpdateExpenseForm from "../expenses/UpdateExpenseForm";
 import { useGetExpenses } from "../expenses/useGetExpenses";
 import { getSelectedExpenseIndex } from "../utils/expenseUtils";
+import ModalWindow from "../components/ModalWindow";
 
-export function Daypicker({ selectedItem }) {
-  const [selected, setSelected] = useState();
-  const [monthDate, setMonthDate] = useState(new Date());
+export function Daypicker({
+  selectedItem,
+  selected,
+  setSelected,
+  monthDate,
+  setMonthDate,
+}) {
   const month = monthDate.getMonth() + 1;
   const year = monthDate.getFullYear();
 
@@ -44,8 +49,12 @@ export function Daypicker({ selectedItem }) {
         disabled={{ after: new Date() }}
         modifiers={{ expenses: expenseDates }}
         modifiersClassNames={{ expenses: styles.expenseHighlight }} // ✅ Only overrides expense days
-        footer={
-          selected ? (
+      />
+      {selected && (
+        <ModalWindow
+          text={selectedIndex === -1 ? "Add Expense" : "Update Expense"}
+        >
+          {selected ? (
             selectedIndex === -1 ? (
               <CreateExpenseForm
                 key={selected?.toISOString()}
@@ -64,9 +73,9 @@ export function Daypicker({ selectedItem }) {
                 selectedItem={selectedItem}
               />
             )
-          ) : null
-        }
-      />
+          ) : null}
+        </ModalWindow>
+      )}
     </>
   );
 }

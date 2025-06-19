@@ -1,14 +1,22 @@
 import { Link } from "react-router";
 import styles from "./basicAnalytics.module.css";
 import { useState } from "react";
+import { useMonthlyExpense } from "./../expenses/useRefreshMonthTotal";
 
-function BasicAnalytics() {
+function BasicAnalytics({ monthDate }) {
+  //? states to manage analytics data
+  const year = monthDate.getFullYear();
+  const month = monthDate.getMonth() + 1;
+
+  //? State to manage notes for month and year
   const [notes, setNotes] = useState(
     JSON.parse(localStorage.getItem("notes")) || { month: "", year: "" }
   );
   const [monthNote, setMonthNote] = useState(notes.month);
   const [yearNote, setYearNote] = useState(notes.year);
 
+  //? State to manage expenses for month and year
+  let monthTotal = useMonthlyExpense(month, year);
   function updateNotes() {
     const updatedNotes = { month: monthNote, year: yearNote };
     localStorage.setItem("notes", JSON.stringify(updatedNotes));
@@ -21,12 +29,9 @@ function BasicAnalytics() {
       <ul className={styles.list}>
         <li className={styles.listItem}>
           <span>Total Expense For this month:</span>
-          <span className={styles.value}>₹0</span>
+          <span className={styles.value}>{`₹${monthTotal}`}</span>
         </li>
-        <li className={styles.listItem}>
-          <span>Total Expense For this year:</span>
-          <span className={styles.value}>₹0</span>
-        </li>
+
         <li className={styles.noteItem}>
           <p className={styles.noteTitle}>Note for this month:</p>
           <div>

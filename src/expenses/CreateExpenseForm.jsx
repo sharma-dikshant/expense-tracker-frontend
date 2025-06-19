@@ -2,13 +2,12 @@ import { useState } from "react";
 import { useCreateExpense } from "./useCreateExpense";
 import { formatDate } from "../utils/dateUtils";
 
-function CreateExpenseForm({ date, refreshMonthTotal, month, year, selectedItem }) {
+function CreateExpenseForm({ date, month, year, selectedItem }) {
   return (
     <div>
       {date ? (
         <Form
           date={date}
-          refreshMonthTotal={refreshMonthTotal}
           month={month}
           year={year}
           selectedItem={selectedItem}
@@ -20,7 +19,7 @@ function CreateExpenseForm({ date, refreshMonthTotal, month, year, selectedItem 
   );
 }
 
-function Form({ date, refreshMonthTotal, month, year, selectedItem }) {
+function Form({ date, month, year, selectedItem }) {
   const l_expense = JSON.parse(localStorage.getItem("expense"));
   // const [item] = useState(l_expense ? l_expense.name : "milk"); // fixed, since it's disabled
   const [amount, setAmount] = useState(l_expense ? l_expense.unitPrice : 70);
@@ -47,7 +46,6 @@ function Form({ date, refreshMonthTotal, month, year, selectedItem }) {
     try {
       localStorage.setItem("expense", JSON.stringify(expense));
       await createExp(expense);
-      await refreshMonthTotal(month, year);
     } catch (error) {
       console.error("Error creating expense:", error);
     }

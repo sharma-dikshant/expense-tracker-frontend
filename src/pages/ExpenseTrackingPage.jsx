@@ -5,6 +5,10 @@ import BasicAnalytics from "./../components/BasicAnalytics";
 import { Daypicker } from "../calender/Daypicker";
 
 function ExpenseTrackingPage() {
+  //? state to manage month and year for the calendar
+  const [selected, setSelected] = useState();
+  const [monthDate, setMonthDate] = useState(new Date());
+
   //? State to manage new item input, items list and selecting item
   const [selectedItem, setSelectedItem] = useState("");
   const [newItem, setNewItem] = useState("");
@@ -46,48 +50,58 @@ function ExpenseTrackingPage() {
   return (
     <>
       <h3>Expense Tracker</h3>
-      <div>
+      <div className={styles.container}>
         <div>
-          <p>Add new Item</p>
-          <input
-            type="text"
-            value={newItem}
-            onChange={(e) => setNewItem(e.target.value)}
+          <div>
+            <p>Add new Item</p>
+            <input
+              type="text"
+              value={newItem}
+              onChange={(e) => setNewItem(e.target.value)}
+            />
+            <button onClick={addNewItem}>add new item</button>
+            {items.length > 0 ? (
+              <div>Please Select an item</div>
+            ) : (
+              <div>Add item to continue</div>
+            )}
+            <ul className={styles.itemsList}>
+              {items.map((items, i) => {
+                return (
+                  <li
+                    className={`${styles.item} ${
+                      items.name === selectedItem ? styles.selected : ""
+                    }`}
+                    key={i}
+                    onClick={() => {
+                      if (items.name === selectedItem) {
+                        setSelectedItem("");
+                      } else {
+                        setSelectedItem(items.name);
+                      }
+                    }}
+                  >
+                    {items.name}
+                    <button onClick={removeItem} className={styles.deleteBtn}>
+                      x
+                    </button>
+                  </li>
+                );
+              })}
+            </ul>
+          </div>
+          <Daypicker
+            selectedItem={selectedItem}
+            selected={selected}
+            setSelected={setSelected}
+            monthDate={monthDate}
+            setMonthDate={setMonthDate}
           />
-          <button onClick={addNewItem}>add new item</button>
-          {items.length > 0 ? (
-            <div>Please Select an item</div>
-          ) : (
-            <div>Add item to continue</div>
-          )}
-          <ul className={styles.itemsList}>
-            {items.map((items, i) => {
-              return (
-                <li
-                  className={`${styles.item} ${
-                    items.name === selectedItem ? styles.selected : ""
-                  }`}
-                  key={i}
-                  onClick={() => {
-                    if (items.name === selectedItem) {
-                      setSelectedItem("");
-                    } else {
-                      setSelectedItem(items.name);
-                    }
-                  }}
-                >
-                  {items.name}
-                  <button onClick={removeItem} className={styles.deleteBtn}>
-                    x
-                  </button>
-                </li>
-              );
-            })}
-          </ul>
         </div>
-        <Daypicker selectedItem={selectedItem} />
+        <div>
+          <BasicAnalytics monthDate={monthDate} />
+        </div>
       </div>
-      <BasicAnalytics />
     </>
   );
 }
