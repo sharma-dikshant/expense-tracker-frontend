@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { DayPicker } from "react-day-picker";
 import "react-day-picker/style.css";
 import styles from "./daypicker.module.css";
@@ -76,6 +75,8 @@ export function Daypicker({
           ) : null}
         </ModalWindow>
       )}
+
+      <div>voice</div>
     </>
   );
 }
