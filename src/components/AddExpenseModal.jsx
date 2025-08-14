@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useEffect, useState } from "react";
 import {
   Dialog,
   DialogTitle,
@@ -12,22 +12,37 @@ import {
   MenuItem,
   Box,
   Typography,
-} from '@mui/material';
-import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-import { format } from 'date-fns';
-import { categories, budgets } from '../data/mockData';
+} from "@mui/material";
+import { format } from "date-fns";
+import { categories } from "./../data/mockData";
+import { getALlBudgetOfLoginUser } from "./../services/budgetApi";
+import { createExpense } from "./../services/expenseApi";
+import toast from "react-hot-toast";
 
 const AddExpenseModal = ({ open, onClose, selectedDate }) => {
+  console.log(selectedDate);
+  const [budgets, setBudgets] = useState([]);
   const [formData, setFormData] = useState({
-    amount: '',
-    category: '',
-    description: '',
-    date: selectedDate || new Date(),
-    budgetId: '',
+    amount: "",
+    category: "",
+    description: "",
+    date: selectedDate,
+    budget: "",
   });
 
+  useEffect(() => {
+    setFormData((prev) => ({
+      ...prev,
+      date: selectedDate || new Date(),
+    }));
+  }, [selectedDate]);
+
+  useEffect(() => {
+    getALlBudgetOfLoginUser().then((res) => setBudgets(res.data.data));
+  }, []);
+
   const handleChange = (field, value) => {
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
       [field]: value,
     }));
@@ -35,28 +50,30 @@ const AddExpenseModal = ({ open, onClose, selectedDate }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // In a real app, this would save the expense
-    console.log('New expense:', formData);
-    onClose();
-    // Reset form
-    setFormData({
-      amount: '',
-      category: '',
-      description: '',
-      date: new Date(),
-      budgetId: '',
-    });
+    createExpense(formData)
+      .then(() => {
+        onClose();
+        setFormData({
+          amount: "",
+          category: "",
+          description: "",
+          date: new Date(),
+          budget: "",
+        });
+        toast.success("added..");
+      })
+      .catch((e) => toast.error("failed"));
   };
 
   const handleClose = () => {
     onClose();
     // Reset form
     setFormData({
-      amount: '',
-      category: '',
-      description: '',
+      amount: "",
+      category: "",
+      description: "",
       date: new Date(),
-      budgetId: '',
+      budget: "",
     });
   };
 
@@ -68,11 +85,11 @@ const AddExpenseModal = ({ open, onClose, selectedDate }) => {
         </Typography>
         {selectedDate && (
           <Typography variant="body2" color="text.secondary">
-            Date: {format(selectedDate, 'MMMM dd, yyyy')}
+            Date: {format(selectedDate, "MMMM dd, yyyy")}
           </Typography>
         )}
       </DialogTitle>
-      
+
       <Box component="form" onSubmit={handleSubmit}>
         <DialogContent>
           <TextField
@@ -80,7 +97,7 @@ const AddExpenseModal = ({ open, onClose, selectedDate }) => {
             label="Amount"
             type="number"
             value={formData.amount}
-            onChange={(e) => handleChange('amount', e.target.value)}
+            onChange={(e) => handleChange("amount", e.target.value)}
             margin="normal"
             required
             inputProps={{ min: 0, step: 0.01 }}
@@ -92,7 +109,7 @@ const AddExpenseModal = ({ open, onClose, selectedDate }) => {
             <Select
               value={formData.category}
               label="Category"
-              onChange={(e) => handleChange('category', e.target.value)}
+              onChange={(e) => handleChange("category", e.target.value)}
               required
             >
               {categories.map((category) => (
@@ -107,31 +124,23 @@ const AddExpenseModal = ({ open, onClose, selectedDate }) => {
             fullWidth
             label="Description"
             value={formData.description}
-            onChange={(e) => handleChange('description', e.target.value)}
+            onChange={(e) => handleChange("description", e.target.value)}
             margin="normal"
-            required
             sx={{ mb: 2 }}
-          />
-
-          <DatePicker
-            label="Date"
-            value={formData.date}
-            onChange={(newDate) => handleChange('date', newDate)}
-            renderInput={(params) => <TextField {...params} fullWidth margin="normal" sx={{ mb: 2 }} />}
           />
 
           <FormControl fullWidth margin="normal">
             <InputLabel>Assign to Budget (Optional)</InputLabel>
             <Select
-              value={formData.budgetId}
+              value={formData.budget}
               label="Assign to Budget (Optional)"
-              onChange={(e) => handleChange('budgetId', e.target.value)}
+              onChange={(e) => handleChange("budget", e.target.value)}
             >
               <MenuItem value="">
                 <em>No budget assignment</em>
               </MenuItem>
               {budgets.map((budget) => (
-                <MenuItem key={budget.id} value={budget.id}>
+                <MenuItem key={budget._id} value={budget._id}>
                   {budget.name} (${budget.limit.toFixed(2)})
                 </MenuItem>
               ))}
@@ -152,4 +161,4 @@ const AddExpenseModal = ({ open, onClose, selectedDate }) => {
   );
 };
 
-export default AddExpenseModal; 
+export default AddExpenseModal;

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 import {
   Box,
   Typography,
@@ -10,29 +10,37 @@ import {
   Select,
   MenuItem,
   Button,
-  Chip,
-  Alert,
-  AlertTitle,
-} from '@mui/material';
+} from "@mui/material";
 import {
   PieChart as PieChartIcon,
   TrendingUp as TrendingIcon,
-  BarChart as BarChartIcon,
   Download as DownloadIcon,
-  Psychology as AiIcon,
-} from '@mui/icons-material';
-
-import ExpensePieChart from '../components/charts/ExpensePieChart';
-import ExpenseTrendChart from '../components/charts/ExpenseTrendChart';
-import BudgetUsageChart from '../components/charts/BudgetUsageChart';
-import AiInsights from '../components/AiInsights';
-
+} from "@mui/icons-material";
+import toast from "react-hot-toast";
+import ExpensePieChart from "../components/charts/ExpensePieChart";
+import ExpenseTrendChart from "../components/charts/ExpenseTrendChart";
 const AnalyticsPage = () => {
-  const [selectedPeriod, setSelectedPeriod] = useState('month');
-  const [selectedYear, setSelectedYear] = useState('2024');
-
   const currentYear = new Date().getFullYear();
+  const currentMonth = new Date().getMonth() + 1; // 1-based
+
+  const [selectedMonth, setSelectedMonth] = useState(currentMonth);
+  const [selectedYear, setSelectedYear] = useState(currentYear.toString());
+
   const years = Array.from({ length: 5 }, (_, i) => currentYear - i);
+  const months = [
+    { value: 1, label: "January" },
+    { value: 2, label: "February" },
+    { value: 3, label: "March" },
+    { value: 4, label: "April" },
+    { value: 5, label: "May" },
+    { value: 6, label: "June" },
+    { value: 7, label: "July" },
+    { value: 8, label: "August" },
+    { value: 9, label: "September" },
+    { value: 10, label: "October" },
+    { value: 11, label: "November" },
+    { value: 12, label: "December" },
+  ];
 
   return (
     <Box>
@@ -49,15 +57,17 @@ const AnalyticsPage = () => {
           <Grid container spacing={2}>
             <Grid item xs={6}>
               <FormControl fullWidth>
-                <InputLabel>Period</InputLabel>
+                <InputLabel>Month</InputLabel>
                 <Select
-                  value={selectedPeriod}
-                  label="Period"
-                  onChange={(e) => setSelectedPeriod(e.target.value)}
+                  value={selectedMonth}
+                  label="Month"
+                  onChange={(e) => setSelectedMonth(Number(e.target.value))}
                 >
-                  <MenuItem value="month">This Month</MenuItem>
-                  <MenuItem value="quarter">This Quarter</MenuItem>
-                  <MenuItem value="year">This Year</MenuItem>
+                  {months.map((month) => (
+                    <MenuItem key={month.value} value={month.value}>
+                      {month.label}
+                    </MenuItem>
+                  ))}
                 </Select>
               </FormControl>
             </Grid>
@@ -87,13 +97,15 @@ const AnalyticsPage = () => {
         <Grid item xs={12} md={6}>
           <Card>
             <CardContent>
-              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 2 }}>
+              <Box
+                sx={{ display: "flex", alignItems: "center", gap: 1, mb: 2 }}
+              >
                 <PieChartIcon color="primary" />
                 <Typography variant="h6" sx={{ fontWeight: 600 }}>
                   Expense Breakdown
                 </Typography>
               </Box>
-              <ExpensePieChart />
+              <ExpensePieChart month={selectedMonth} year={selectedYear} />
             </CardContent>
           </Card>
         </Grid>
@@ -102,45 +114,19 @@ const AnalyticsPage = () => {
         <Grid item xs={12} md={6}>
           <Card>
             <CardContent>
-              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 2 }}>
+              <Box
+                sx={{ display: "flex", alignItems: "center", gap: 1, mb: 2 }}
+              >
                 <TrendingIcon color="primary" />
                 <Typography variant="h6" sx={{ fontWeight: 600 }}>
                   Monthly Trend
                 </Typography>
               </Box>
-              <ExpenseTrendChart />
-            </CardContent>
-          </Card>
-        </Grid>
-
-        {/* Budget Usage */}
-        <Grid item xs={12}>
-          <Card>
-            <CardContent>
-              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 2 }}>
-                <BarChartIcon color="primary" />
-                <Typography variant="h6" sx={{ fontWeight: 600 }}>
-                  Budget Usage
-                </Typography>
-              </Box>
-              <BudgetUsageChart />
+              <ExpenseTrendChart month={selectedMonth} year={selectedYear} />
             </CardContent>
           </Card>
         </Grid>
       </Grid>
-
-      {/* AI Insights */}
-      <Card sx={{ mb: 3 }}>
-        <CardContent>
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 2 }}>
-            <AiIcon color="primary" />
-            <Typography variant="h6" sx={{ fontWeight: 600 }}>
-              AI Insights
-            </Typography>
-          </Box>
-          <AiInsights />
-        </CardContent>
-      </Card>
 
       {/* Export Section */}
       <Card>
@@ -151,13 +137,12 @@ const AnalyticsPage = () => {
           <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
             Download your expense reports and analytics data
           </Typography>
-          <Box sx={{ display: 'flex', gap: 2, flexWrap: 'wrap' }}>
+          <Box sx={{ display: "flex", gap: 2, flexWrap: "wrap" }}>
             <Button
               variant="outlined"
               startIcon={<DownloadIcon />}
               onClick={() => {
-                // In a real app, this would generate and download a PDF
-                console.log('Downloading expense report...');
+                toast.error("this feature is yet not implemented...");
               }}
             >
               Download Expense Report
@@ -166,8 +151,7 @@ const AnalyticsPage = () => {
               variant="outlined"
               startIcon={<DownloadIcon />}
               onClick={() => {
-                // In a real app, this would export data as CSV
-                console.log('Exporting data as CSV...');
+                toast.error("this feature is yet not implemented...");
               }}
             >
               Export as CSV
@@ -179,4 +163,4 @@ const AnalyticsPage = () => {
   );
 };
 
-export default AnalyticsPage; 
+export default AnalyticsPage;

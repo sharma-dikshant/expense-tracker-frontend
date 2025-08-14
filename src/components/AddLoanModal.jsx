@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 import {
   Dialog,
   DialogTitle,
@@ -12,20 +12,21 @@ import {
   MenuItem,
   Box,
   Typography,
-} from '@mui/material';
-import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+} from "@mui/material";
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import { createNewDebtEntry } from "./../services/debtEntryApi";
 
 const AddLoanModal = ({ open, onClose, type }) => {
   const [formData, setFormData] = useState({
-    name: '',
-    amount: '',
+    to: "",
+    amount: "",
     date: new Date(),
-    status: 'pending',
-    notes: '',
+    status: "pending",
+    note: "",
   });
 
   const handleChange = (field, value) => {
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
       [field]: value,
     }));
@@ -34,15 +35,16 @@ const AddLoanModal = ({ open, onClose, type }) => {
   const handleSubmit = (e) => {
     e.preventDefault();
     // In a real app, this would save the loan
-    console.log('New loan:', { ...formData, type });
+    // console.log('New loan:', { ...formData, type });
+    createNewDebtEntry({ ...formData, type });
     onClose();
     // Reset form
     setFormData({
-      name: '',
-      amount: '',
+      name: "",
+      amount: "",
       date: new Date(),
-      status: 'pending',
-      notes: '',
+      status: "pending",
+      notes: "",
     });
   };
 
@@ -50,20 +52,22 @@ const AddLoanModal = ({ open, onClose, type }) => {
     onClose();
     // Reset form
     setFormData({
-      name: '',
-      amount: '',
+      to: "",
+      amount: "",
       date: new Date(),
-      status: 'pending',
-      notes: '',
+      status: "pending",
+      note: "",
     });
   };
 
   const getTitle = () => {
-    return type === 'lent' ? 'Add Money Lent' : 'Add Money Borrowed';
+    return type === "lent" ? "Add Money Lent" : "Add Money Borrowed";
   };
 
   const getPersonLabel = () => {
-    return type === 'lent' ? 'Person Name (Who you lent to)' : 'Person Name (Who you borrowed from)';
+    return type === "lent"
+      ? "Person Name (Who you lent to)"
+      : "Person Name (Who you borrowed from)";
   };
 
   return (
@@ -73,14 +77,14 @@ const AddLoanModal = ({ open, onClose, type }) => {
           {getTitle()}
         </Typography>
       </DialogTitle>
-      
+
       <Box component="form" onSubmit={handleSubmit}>
         <DialogContent>
           <TextField
             fullWidth
             label={getPersonLabel()}
-            value={formData.name}
-            onChange={(e) => handleChange('name', e.target.value)}
+            value={formData.to}
+            onChange={(e) => handleChange("to", e.target.value)}
             margin="normal"
             required
             sx={{ mb: 2 }}
@@ -91,7 +95,7 @@ const AddLoanModal = ({ open, onClose, type }) => {
             label="Amount"
             type="number"
             value={formData.amount}
-            onChange={(e) => handleChange('amount', e.target.value)}
+            onChange={(e) => handleChange("amount", e.target.value)}
             margin="normal"
             required
             inputProps={{ min: 0, step: 0.01 }}
@@ -101,8 +105,10 @@ const AddLoanModal = ({ open, onClose, type }) => {
           <DatePicker
             label="Date"
             value={formData.date}
-            onChange={(newDate) => handleChange('date', newDate)}
-            renderInput={(params) => <TextField {...params} fullWidth margin="normal" sx={{ mb: 2 }} />}
+            onChange={(newDate) => handleChange("date", newDate)}
+            renderInput={(params) => (
+              <TextField {...params} fullWidth margin="normal" sx={{ mb: 2 }} />
+            )}
           />
 
           <FormControl fullWidth margin="normal" sx={{ mb: 2 }}>
@@ -110,7 +116,7 @@ const AddLoanModal = ({ open, onClose, type }) => {
             <Select
               value={formData.status}
               label="Status"
-              onChange={(e) => handleChange('status', e.target.value)}
+              onChange={(e) => handleChange("status", e.target.value)}
             >
               <MenuItem value="pending">Pending</MenuItem>
               <MenuItem value="settled">Settled</MenuItem>
@@ -120,8 +126,8 @@ const AddLoanModal = ({ open, onClose, type }) => {
           <TextField
             fullWidth
             label="Notes (Optional)"
-            value={formData.notes}
-            onChange={(e) => handleChange('notes', e.target.value)}
+            value={formData.note}
+            onChange={(e) => handleChange("note", e.target.value)}
             margin="normal"
             multiline
             rows={3}
@@ -133,7 +139,7 @@ const AddLoanModal = ({ open, onClose, type }) => {
             Cancel
           </Button>
           <Button type="submit" variant="contained">
-            Add {type === 'lent' ? 'Lent' : 'Borrowed'}
+            Add {type === "lent" ? "Lent" : "Borrowed"}
           </Button>
         </DialogActions>
       </Box>
@@ -141,4 +147,4 @@ const AddLoanModal = ({ open, onClose, type }) => {
   );
 };
 
-export default AddLoanModal; 
+export default AddLoanModal;

@@ -1,144 +1,180 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 import {
+  Box,
+  Button,
   Dialog,
   DialogTitle,
   DialogContent,
   DialogActions,
   TextField,
-  Button,
   FormControl,
   InputLabel,
   Select,
   MenuItem,
-  Box,
-  Typography,
-} from '@mui/material';
-import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-import { categories } from '../data/mockData';
+  useMediaQuery,
+  useTheme,
+} from "@mui/material";
+import { createRecurringExpense } from "../services/recurringExpenseApi";
 
-const AddRecurringModal = ({ open, onClose }) => {
+const AddRecurringModal = ({ open, handleClose, onSuccess }) => {
+  const theme = useTheme();
+  const fullScreen = useMediaQuery(theme.breakpoints.down("sm"));
+
   const [formData, setFormData] = useState({
-    amount: '',
-    category: '',
-    description: '',
-    frequency: 'monthly',
-    nextDue: new Date(),
+    name: "",
+    amount: "",
+    frequency: "",
+    startDate: "",
+    category: "",
+    notes: "",
   });
 
-  const handleChange = (field, value) => {
-    setFormData(prev => ({
+  const [loading, setLoading] = useState(false);
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({
       ...prev,
-      [field]: value,
+      [name]: value,
     }));
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    // In a real app, this would save the recurring expense
-    console.log('New recurring expense:', formData);
-    onClose();
-    // Reset form
-    setFormData({
-      amount: '',
-      category: '',
-      description: '',
-      frequency: 'monthly',
-      nextDue: new Date(),
-    });
-  };
-
-  const handleClose = () => {
-    onClose();
-    // Reset form
-    setFormData({
-      amount: '',
-      category: '',
-      description: '',
-      frequency: 'monthly',
-      nextDue: new Date(),
-    });
+  const handleSubmit = async () => {
+    try {
+      setLoading(true);
+      await createRecurringExpense(formData);
+      if (onSuccess) onSuccess();
+      handleClose();
+      setFormData({
+        name: "",
+        amount: "",
+        frequency: "",
+        startDate: "",
+        category: "",
+        notes: "",
+      });
+    } catch (err) {
+      console.error("Error creating recurring expense:", err);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
-    <Dialog open={open} onClose={handleClose} maxWidth="sm" fullWidth>
-      <DialogTitle>
-        <Typography variant="h6" sx={{ fontWeight: 600 }}>
-          Add Recurring Expense
-        </Typography>
-      </DialogTitle>
-      
-      <Box component="form" onSubmit={handleSubmit}>
-        <DialogContent>
+    <Dialog
+      open={open}
+      onClose={handleClose}
+      fullScreen={fullScreen}
+      maxWidth="sm"
+      fullWidth
+    >
+      <DialogTitle>Add Recurring Expense</DialogTitle>
+      <DialogContent dividers>
+        <Box display="flex" flexDirection="column" gap={2}>
+          {/* Name */}
           <TextField
+            label="Name"
+            name="name"
+            value={formData.name}
+            onChange={handleChange}
             fullWidth
+          />
+
+          {/* Amount */}
+          <TextField
             label="Amount"
+            name="amount"
             type="number"
             value={formData.amount}
-            onChange={(e) => handleChange('amount', e.target.value)}
-            margin="normal"
-            required
-            inputProps={{ min: 0, step: 0.01 }}
-            sx={{ mb: 2 }}
-          />
-
-          <FormControl fullWidth margin="normal" sx={{ mb: 2 }}>
-            <InputLabel>Category</InputLabel>
-            <Select
-              value={formData.category}
-              label="Category"
-              onChange={(e) => handleChange('category', e.target.value)}
-              required
-            >
-              {categories.map((category) => (
-                <MenuItem key={category.id} value={category.name}>
-                  {category.name}
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
-
-          <TextField
+            onChange={handleChange}
             fullWidth
-            label="Description"
-            value={formData.description}
-            onChange={(e) => handleChange('description', e.target.value)}
-            margin="normal"
-            required
-            sx={{ mb: 2 }}
           />
 
-          <FormControl fullWidth margin="normal" sx={{ mb: 2 }}>
+          {/* Frequency */}
+          <FormControl fullWidth>
             <InputLabel>Frequency</InputLabel>
             <Select
+              name="frequency"
               value={formData.frequency}
-              label="Frequency"
-              onChange={(e) => handleChange('frequency', e.target.value)}
+              onChange={handleChange}
             >
+              <MenuItem value="daily">Daily</MenuItem>
               <MenuItem value="weekly">Weekly</MenuItem>
               <MenuItem value="monthly">Monthly</MenuItem>
-              <MenuItem value="yearly">Yearly</MenuItem>
             </Select>
           </FormControl>
 
-          <DatePicker
-            label="Next Due Date"
-            value={formData.nextDue}
-            onChange={(newDate) => handleChange('nextDue', newDate)}
-            renderInput={(params) => <TextField {...params} fullWidth margin="normal" />}
-          />
-        </DialogContent>
+          {/* Conditional Inputs */}
+          {formData.frequency === "weekly" && (
+            <TextField
+              label="Day of Week"
+              name="dayOfWeek"
+              value={formData.dayOfWeek || ""}
+              onChange={handleChange}
+              fullWidth
+            />
+          )}
+          {formData.frequency === "monthly" && (
+            <TextField
+              label="Day of Month"
+              name="dayOfMonth"
+              value={formData.dayOfMonth || ""}
+              onChange={handleChange}
+              fullWidth
+            />
+          )}
+          {formData.frequency === "yearly" && (
+            <TextField
+              label="Month & Day"
+              name="monthDay"
+              value={formData.monthDay || ""}
+              onChange={handleChange}
+              fullWidth
+            />
+          )}
 
-        <DialogActions sx={{ p: 3, pt: 0 }}>
-          <Button onClick={handleClose} color="inherit">
-            Cancel
-          </Button>
-          <Button type="submit" variant="contained">
-            Add Recurring Expense
-          </Button>
-        </DialogActions>
-      </Box>
+          {/* Start Date */}
+          <TextField
+            label="Start Date"
+            name="startDate"
+            type="date"
+            InputLabelProps={{ shrink: true }}
+            value={formData.startDate}
+            onChange={handleChange}
+            fullWidth
+          />
+
+          {/* Category */}
+          <TextField
+            label="Category"
+            name="category"
+            value={formData.category}
+            onChange={handleChange}
+            fullWidth
+          />
+
+          {/* Notes */}
+          <TextField
+            label="Notes"
+            name="notes"
+            multiline
+            rows={2}
+            value={formData.notes}
+            onChange={handleChange}
+            fullWidth
+          />
+        </Box>
+      </DialogContent>
+      <DialogActions>
+        <Button onClick={handleClose} disabled={loading}>
+          Cancel
+        </Button>
+        <Button variant="contained" onClick={handleSubmit} disabled={loading}>
+          {loading ? "Saving..." : "Save"}
+        </Button>
+      </DialogActions>
     </Dialog>
   );
 };
 
-export default AddRecurringModal; 
+export default AddRecurringModal;

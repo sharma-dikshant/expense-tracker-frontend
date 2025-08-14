@@ -1,30 +1,40 @@
-import React from 'react';
-import { Box, Typography } from '@mui/material';
-import { PieChart, Pie, Cell, ResponsiveContainer, Legend, Tooltip } from 'recharts';
-import { categoryBreakdown } from '../../data/mockData';
+import React, { useEffect, useState } from "react";
+import { Box, Typography } from "@mui/material";
+import {
+  PieChart,
+  Pie,
+  Cell,
+  ResponsiveContainer,
+  Legend,
+  Tooltip,
+} from "recharts";
+import { getRandomColors } from "./../../utils/helper";
+import { getMonthStats } from "./../../services/statsApi";
 
-const ExpensePieChart = () => {
-  const COLORS = [
-    '#3B82F6',
-    '#10B981',
-    '#F59E0B',
-    '#8B5CF6',
-    '#EF4444',
-    '#6B7280',
-    '#059669',
-  ];
+const ExpensePieChart = ({ month, year }) => {
+  const [expenseData, setExpenseData] = useState([]);
+
+  useEffect(() => {
+    getMonthStats(month, year).then((res) => setExpenseData(res.data.data));
+  }, [month, year]);
+
+  const COLORS = getRandomColors(expenseData.length);
+
+  const chartData = expenseData.map((el, i) => {
+    return { name: el.category, value: el.monthExpense, color: COLORS[i] };
+  });
 
   const CustomTooltip = ({ active, payload }) => {
     if (active && payload && payload.length) {
       const data = payload[0];
-      const total = categoryBreakdown.reduce((sum, item) => sum + item.value, 0);
+      const total = chartData.reduce((sum, item) => sum + item.value, 0);
       const percentage = ((data.value / total) * 100).toFixed(1);
-      
+
       return (
         <Box
           sx={{
-            backgroundColor: 'white',
-            border: '1px solid #ccc',
+            backgroundColor: "white",
+            border: "1px solid #ccc",
             borderRadius: 1,
             p: 1,
             boxShadow: 2,
@@ -47,17 +57,22 @@ const ExpensePieChart = () => {
       <ResponsiveContainer width="100%" height="100%">
         <PieChart>
           <Pie
-            data={categoryBreakdown}
+            data={chartData}
             cx="50%"
             cy="50%"
             labelLine={false}
-            label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
+            label={({ name, percent }) =>
+              `${name} ${(percent * 100).toFixed(0)}%`
+            }
             outerRadius={80}
             fill="#8884d8"
             dataKey="value"
           >
-            {categoryBreakdown.map((entry, index) => (
-              <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+            {chartData.map((entry, index) => (
+              <Cell
+                key={`cell-${index}`}
+                fill={COLORS[index % COLORS.length]}
+              />
             ))}
           </Pie>
           <Tooltip content={<CustomTooltip />} />
@@ -68,4 +83,4 @@ const ExpensePieChart = () => {
   );
 };
 
-export default ExpensePieChart; 
+export default ExpensePieChart;

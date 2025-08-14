@@ -127,7 +127,7 @@ const HomePage = () => {
         <Button
           variant="contained"
           size="large"
-          onClick={() => navigate('/signup')}
+          onClick={() => navigate('/app')}
           sx={{ minWidth: 200 }}
         >
           Get Started Free

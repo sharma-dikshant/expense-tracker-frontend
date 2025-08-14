@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from "react";
 import {
   Box,
   Typography,
@@ -15,59 +15,108 @@ import {
   ListItemSecondaryAction,
   IconButton,
   Divider,
-} from '@mui/material';
+  CircularProgress,
+} from "@mui/material";
 import {
   Add as AddIcon,
   Edit as EditIcon,
   Delete as DeleteIcon,
   CheckCircle as CheckCircleIcon,
   SwapHoriz as SwapIcon,
-} from '@mui/icons-material';
+} from "@mui/icons-material";
 
-import AddLoanModal from '../components/AddLoanModal';
-import { loans } from '../data/mockData';
+import AddLoanModal from "../components/AddLoanModal";
+import {
+  getAllDebtEntryofLoggedInUser,
+  createNewDebtEntry,
+  updateDebtEntry,
+  deleteDebtEntry,
+} from "./../services/debtEntryApi"; // Adjust path
 
 const LoanPage = () => {
   const [activeTab, setActiveTab] = useState(0);
   const [isAddLoanOpen, setIsAddLoanOpen] = useState(false);
+  const [loans, setLoans] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-  const lentLoans = loans.filter(loan => loan.type === 'lent');
-  const borrowedLoans = loans.filter(loan => loan.type === 'borrowed');
+  // Fetch loans from backend
+  const fetchLoans = async () => {
+    setLoading(true);
+    try {
+      const res = await getAllDebtEntryofLoggedInUser();
+      if (res.data?.data) {
+        setLoans(res.data.data);
+      }
+    } catch (err) {
+      console.error("Error fetching loans:", err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchLoans();
+  }, []);
+
+  const lentLoans = loans.filter((loan) => loan.type === "lent");
+  const borrowedLoans = loans.filter((loan) => loan.type === "borrow");
 
   const totalLent = lentLoans.reduce((sum, loan) => sum + loan.amount, 0);
-  const totalBorrowed = borrowedLoans.reduce((sum, loan) => sum + loan.amount, 0);
-  const pendingLent = lentLoans.filter(loan => loan.status === 'pending').reduce((sum, loan) => sum + loan.amount, 0);
-  const pendingBorrowed = borrowedLoans.filter(loan => loan.status === 'pending').reduce((sum, loan) => sum + loan.amount, 0);
+  const totalBorrowed = borrowedLoans.reduce(
+    (sum, loan) => sum + loan.amount,
+    0
+  );
+  const pendingLent = lentLoans
+    .filter((loan) => loan.status === "pending")
+    .reduce((sum, loan) => sum + loan.amount, 0);
+  const pendingBorrowed = borrowedLoans
+    .filter((loan) => loan.status === "pending")
+    .reduce((sum, loan) => sum + loan.amount, 0);
 
   const handleTabChange = (event, newValue) => {
     setActiveTab(newValue);
   };
 
-  const handleMarkSettled = (loanId) => {
-    // In a real app, this would update the loan status
-    console.log('Mark as settled:', loanId);
+  const handleMarkSettled = async (loanId) => {
+    try {
+      await updateDebtEntry(loanId, { status: "settled" });
+      fetchLoans();
+    } catch (err) {
+      console.error("Error marking loan settled:", err);
+    }
   };
 
-  const handleDelete = (loanId) => {
-    // In a real app, this would delete the loan
-    console.log('Delete loan:', loanId);
+  const handleDelete = async (loanId) => {
+    try {
+      await deleteDebtEntry(loanId);
+      fetchLoans();
+    } catch (err) {
+      console.error("Error deleting loan:", err);
+    }
   };
 
-  const renderLoanList = (loanList, type) => (
+  const renderLoanList = (loanList) => (
     <List sx={{ p: 0 }}>
       {loanList.map((loan, index) => (
-        <Box key={loan.id}>
+        <Box key={loan._id}>
           <ListItem sx={{ px: 0, py: 2 }}>
             <ListItemText
               primary={
-                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 0.5 }}>
+                <Box
+                  sx={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: 1,
+                    mb: 0.5,
+                  }}
+                >
                   <Typography variant="subtitle1" sx={{ fontWeight: 600 }}>
-                    {loan.name}
+                    {loan.to}
                   </Typography>
                   <Chip
                     label={loan.status}
                     size="small"
-                    color={loan.status === 'settled' ? 'success' : 'warning'}
+                    color={loan.status === "settled" ? "success" : "warning"}
                     variant="outlined"
                   />
                 </Box>
@@ -75,22 +124,27 @@ const LoanPage = () => {
               secondary={
                 <Box>
                   <Typography variant="body2" color="text.secondary">
-                    ${loan.amount.toFixed(2)} • {new Date(loan.date).toLocaleDateString()}
+                    ${loan.amount.toFixed(2)} •{" "}
+                    {new Date(loan.date).toLocaleDateString()}
                   </Typography>
-                  {loan.notes && (
-                    <Typography variant="body2" color="text.secondary" sx={{ mt: 0.5 }}>
-                      {loan.notes}
+                  {loan.note && (
+                    <Typography
+                      variant="body2"
+                      color="text.secondary"
+                      sx={{ mt: 0.5 }}
+                    >
+                      {loan.note}
                     </Typography>
                   )}
                 </Box>
               }
             />
             <ListItemSecondaryAction>
-              <Box sx={{ display: 'flex', gap: 1 }}>
-                {loan.status === 'pending' && (
+              <Box sx={{ display: "flex", gap: 1 }}>
+                {loan.status === "pending" && (
                   <IconButton
                     edge="end"
-                    onClick={() => handleMarkSettled(loan.id)}
+                    onClick={() => handleMarkSettled(loan._id)}
                     color="success"
                     size="small"
                   >
@@ -99,14 +153,15 @@ const LoanPage = () => {
                 )}
                 <IconButton
                   edge="end"
-                  onClick={() => console.log('Edit loan:', loan.id)}
+                  //TODO implement edit loan
+                  onClick={() => console.log("Edit loan:", loan._id)}
                   size="small"
                 >
                   <EditIcon />
                 </IconButton>
                 <IconButton
                   edge="end"
-                  onClick={() => handleDelete(loan.id)}
+                  onClick={() => handleDelete(loan._id)}
                   color="error"
                   size="small"
                 >
@@ -121,6 +176,14 @@ const LoanPage = () => {
     </List>
   );
 
+  if (loading) {
+    return (
+      <Box sx={{ display: "flex", justifyContent: "center", py: 4 }}>
+        <CircularProgress />
+      </Box>
+    );
+  }
+
   return (
     <Box>
       <Typography variant="h4" component="h1" sx={{ mb: 3, fontWeight: 600 }}>
@@ -131,8 +194,12 @@ const LoanPage = () => {
       <Grid container spacing={2} sx={{ mb: 3 }}>
         <Grid item xs={6}>
           <Card>
-            <CardContent sx={{ textAlign: 'center', py: 2 }}>
-              <Typography variant="h6" color="success.main" sx={{ fontWeight: 600 }}>
+            <CardContent sx={{ textAlign: "center", py: 2 }}>
+              <Typography
+                variant="h6"
+                color="success.main"
+                sx={{ fontWeight: 600 }}
+              >
                 ${totalLent.toFixed(2)}
               </Typography>
               <Typography variant="body2" color="text.secondary">
@@ -146,8 +213,12 @@ const LoanPage = () => {
         </Grid>
         <Grid item xs={6}>
           <Card>
-            <CardContent sx={{ textAlign: 'center', py: 2 }}>
-              <Typography variant="h6" color="error.main" sx={{ fontWeight: 600 }}>
+            <CardContent sx={{ textAlign: "center", py: 2 }}>
+              <Typography
+                variant="h6"
+                color="error.main"
+                sx={{ fontWeight: 600 }}
+              >
                 ${totalBorrowed.toFixed(2)}
               </Typography>
               <Typography variant="body2" color="text.secondary">
@@ -164,16 +235,16 @@ const LoanPage = () => {
       {/* Tabs */}
       <Card>
         <CardContent sx={{ p: 0 }}>
-          <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+          <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
             <Tabs value={activeTab} onChange={handleTabChange} sx={{ px: 2 }}>
-              <Tab 
-                label={`Lent (${lentLoans.length})`} 
-                icon={<SwapIcon />} 
+              <Tab
+                label={`Lent (${lentLoans.length})`}
+                icon={<SwapIcon />}
                 iconPosition="start"
               />
-              <Tab 
-                label={`Borrowed (${borrowedLoans.length})`} 
-                icon={<SwapIcon />} 
+              <Tab
+                label={`Borrowed (${borrowedLoans.length})`}
+                icon={<SwapIcon />}
                 iconPosition="start"
               />
             </Tabs>
@@ -182,7 +253,14 @@ const LoanPage = () => {
           <Box sx={{ p: 2 }}>
             {activeTab === 0 && (
               <Box>
-                <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
+                <Box
+                  sx={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                    mb: 2,
+                  }}
+                >
                   <Typography variant="h6" sx={{ fontWeight: 600 }}>
                     Money Lent
                   </Typography>
@@ -196,9 +274,9 @@ const LoanPage = () => {
                   </Button>
                 </Box>
                 {lentLoans.length > 0 ? (
-                  renderLoanList(lentLoans, 'lent')
+                  renderLoanList(lentLoans)
                 ) : (
-                  <Box sx={{ textAlign: 'center', py: 4 }}>
+                  <Box sx={{ textAlign: "center", py: 4 }}>
                     <Typography variant="body1" color="text.secondary">
                       No money lent yet
                     </Typography>
@@ -212,7 +290,14 @@ const LoanPage = () => {
 
             {activeTab === 1 && (
               <Box>
-                <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
+                <Box
+                  sx={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                    mb: 2,
+                  }}
+                >
                   <Typography variant="h6" sx={{ fontWeight: 600 }}>
                     Money Borrowed
                   </Typography>
@@ -226,9 +311,9 @@ const LoanPage = () => {
                   </Button>
                 </Box>
                 {borrowedLoans.length > 0 ? (
-                  renderLoanList(borrowedLoans, 'borrowed')
+                  renderLoanList(borrowedLoans)
                 ) : (
-                  <Box sx={{ textAlign: 'center', py: 4 }}>
+                  <Box sx={{ textAlign: "center", py: 4 }}>
                     <Typography variant="body1" color="text.secondary">
                       No money borrowed yet
                     </Typography>
@@ -247,10 +332,11 @@ const LoanPage = () => {
       <AddLoanModal
         open={isAddLoanOpen}
         onClose={() => setIsAddLoanOpen(false)}
-        type={activeTab === 0 ? 'lent' : 'borrowed'}
+        type={activeTab === 0 ? "lent" : "borrow"}
+        onAdded={fetchLoans} // Refresh after adding
       />
     </Box>
   );
 };
 
-export default LoanPage; 
+export default LoanPage;
